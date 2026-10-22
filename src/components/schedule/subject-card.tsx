@@ -16,8 +16,8 @@ export function SubjectCard({ subject, className }: SubjectCardProps) {
       data-testid="subject-card"
       className={cn(
         "flex h-full w-full flex-col overflow-hidden rounded-md border px-1.5 py-0.5 text-center",
-        "transition-[transform,box-shadow] duration-150 ease-out",
-        "hover:-translate-y-px hover:shadow-md hover:shadow-black/10",
+        "transition-[box-shadow] duration-150 ease-out",
+        "hover:shadow-md hover:shadow-black/10",
         className,
       )}
       style={{

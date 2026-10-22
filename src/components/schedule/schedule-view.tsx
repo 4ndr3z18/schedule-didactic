@@ -72,18 +72,24 @@ export function ScheduleView({ subjects, blocks: initialBlocks }: Schedule) {
     const block = blocks.find((item) => item.id === event.active.id);
     if (!block) return;
 
+    // `active.rect.current.initial` todavía es null en este punto: el overlay
+    // quedaría en 0×0 y la tarjeta se vería cortada. Medimos la tarjeta real.
+    const target = event.activatorEvent.target;
+    const node = target instanceof Element ? target.closest<HTMLElement>("[data-block-id]") : null;
     const rect = event.active.rect.current.initial;
 
-    setActiveDrag({ block, width: rect?.width ?? 0, height: rect?.height ?? 0 });
+    setActiveDrag({
+      block,
+      width: node?.offsetWidth ?? rect?.width ?? 0,
+      height: node?.offsetHeight ?? rect?.height ?? 0,
+    });
   }
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     setActiveDrag(null);
 
-    const target = over?.data.current as
-      | { dayOfWeek: DayOfWeek; moduleIndex: number }
-      | undefined;
+    const target = over?.data.current as { dayOfWeek: DayOfWeek; moduleIndex: number } | undefined;
     if (!target) return;
 
     const moving = blocks.find((block) => block.id === active.id);
@@ -121,9 +127,10 @@ export function ScheduleView({ subjects, blocks: initialBlocks }: Schedule) {
     setIsExporting(true);
 
     try {
+      const background = getComputedStyle(node).backgroundColor;
       const dataUrl = await toPng(node, {
         pixelRatio: 2,
-        backgroundColor: "#ffffff",
+        backgroundColor: background && background !== "rgba(0, 0, 0, 0)" ? background : "#ffffff",
         cacheBust: true,
         filter: (element) =>
           !(element instanceof HTMLElement && element.dataset.exportExclude === "true"),
@@ -148,7 +155,7 @@ export function ScheduleView({ subjects, blocks: initialBlocks }: Schedule) {
       <div className="flex flex-wrap items-end justify-between gap-2">
         <div className="flex flex-col gap-0.5">
           <h1 className="text-lg font-semibold tracking-tight">Horario semanal</h1>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             9 módulos · mantén presionada una tarjeta para moverla
           </p>
         </div>
@@ -169,7 +176,7 @@ export function ScheduleView({ subjects, blocks: initialBlocks }: Schedule) {
           <SubjectsPanel subjects={subjects} />
         </aside>
 
-        <div ref={exportRef} className="min-w-0 flex-1 bg-background">
+        <div ref={exportRef} className="bg-background min-w-0 flex-1">
           {blocks.length > 0 ? (
             <DndContext
               id="horario-semanal"
@@ -197,6 +204,7 @@ export function ScheduleView({ subjects, blocks: initialBlocks }: Schedule) {
               <ScheduleGrid
                 subjects={subjects}
                 blocks={blocks}
+                isDragging={activeDrag != null}
                 cornerSlot={
                   <span data-export-exclude="true">
                     <Button
@@ -224,7 +232,7 @@ export function ScheduleView({ subjects, blocks: initialBlocks }: Schedule) {
                 }
               >
                 {activeDrag && activeSubject ? (
-                  <div className="rotate-[1.5deg] scale-[1.02] rounded-[3px] shadow-xl shadow-black/25 motion-safe:animate-in motion-safe:zoom-in-[0.98] motion-safe:duration-150">
+                  <div className="schedule-drag-lift h-full w-full origin-center rounded-[3px] shadow-2xl shadow-black/30">
                     <SubjectCard subject={activeSubject} />
                   </div>
                 ) : null}
@@ -240,7 +248,7 @@ export function ScheduleView({ subjects, blocks: initialBlocks }: Schedule) {
         <SheetContent
           side="left"
           showCloseButton={false}
-          className="w-[min(20rem,85vw)] gap-0 bg-background p-0 sm:max-w-[20rem]"
+          className="bg-background w-[min(20rem,85vw)] gap-0 p-0 sm:max-w-[20rem]"
         >
           <SheetHeader className="flex-row items-center justify-between border-b p-4">
             <div className="flex items-center gap-2">
