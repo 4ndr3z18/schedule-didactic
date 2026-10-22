@@ -1,7 +1,7 @@
 # MEMORY.md — UsachSchedule
 
 ## Estado
-- Scaffold, grilla y drag & drop listos; movimientos sin persistir.
+- Scaffold, grilla, drag & drop y modo oscuro en `main`; movimientos sin persistir.
 - Andrés: backend. Sebastián: frontend (`src/app/`, `src/components/`).
 - Reglas: `AGENTS.md`; plan y contrato en `docs/`.
 

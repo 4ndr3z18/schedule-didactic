@@ -123,3 +123,31 @@ Reglas de la frontera:
 **Decisión:** El tema se maneja con `next-themes` (`attribute="class"`, `defaultTheme="system"`, `enableSystem`) y un botón `Sun`/`Moon` en el header. En móvil, el contenedor del horario usa `scroll-snap-type: x mandatory` con `scroll-padding-left: 4.25rem` y cada columna de día es un punto de imán; el imán se desactiva mientras se arrastra. La columna de horas conserva su línea y una sombra sutil, y el borde derecho muestra un degradado solo cuando queda contenido por ver. La exportación PNG usa el fondo calculado del horario para respetar el tema activo.
 
 **Consecuencias:** El tema se persiste en `localStorage` y respeta la preferencia del sistema hasta que el usuario lo cambie. El desplazamiento móvil siempre deja un día alineado junto a la columna de horas, aunque la última columna parcial se atenúa con el degradado. Cualquier componente nuevo dentro del horario debe mantener fondos opacos para que las líneas de la grilla (dibujadas con `gap-px`) no se transparenten.
+
+---
+
+## ADR-009 — Tarjeta con holgura y altura de fila fluida
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada
+
+**Contexto:** La tarjeta del horario usaba 39 de los 40 px útiles de la celda. Con el tamaño de fuente por defecto entraba por 1 px, pero cualquier agrandamiento del texto (tamaño mínimo de fuente del navegador, escalado del sistema o una fuente de reserva con otras métricas) recortaba el nombre y el código contra el `overflow-hidden`. Además, en escritorio el ancho de la tarjeta crecía con la pantalla y el alto no, así que en 1440 px y 1920 px se veía aplanada (4,0:1 y 4,7:1).
+
+**Decisión:**
+
+- El alto de fila vive en `--schedule-row-h`: `3.5rem` en móvil y `clamp(3.5rem, 4.1vw, 4.5rem)` desde `sm`. Las filas se declaran `minmax(var(--schedule-row-h), auto)`: miden lo mínimo definido, pero crecen si el texto crece.
+- La tarjeta centra en bloque el nombre y el código (`justify-center`), con `gap-1`, `py-1` y el nombre con `shrink` en vez de `flex-1`. Así el código nunca queda pegado al borde inferior.
+- El `ScheduleSkeleton` usa la misma variable y la misma retícula que la grilla real.
+
+**Consecuencias:** Ninguna tarjeta recorta texto con escalados de hasta el 200 %; en escalados extremos algunas filas quedan más altas que otras. En escritorio la proporción se mantiene alrededor de 3:1 y la grilla sigue uniforme en tamaños normales. El overlay de arrastre y la exportación PNG heredan el layout porque usan el mismo componente.
+
+---
+
+## ADR-010 — Fusión directa de `sebastian` en `main` (excepción a ADR-002)
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada
+
+**Contexto:** El PR #7 (arrastre, snap móvil y modo oscuro) tenía el CI en verde y encima se sumaron los arreglos de la tarjeta del horario (ADR-009). El propietario del frontend pidió oficializar todo en `main` en vez de esperar la revisión del PR. `main` era ancestro directo de `sebastian`, así que la integración era un fast-forward sin conflictos.
+
+**Decisión:** Se integró `sebastian` en `main` por fast-forward y push directo, sin la revisión previa de Andrés. GitHub cerró el PR #7 como fusionado. La excepción es puntual y no modifica ADR-002: el resto del trabajo vuelve al flujo de rama personal más PR con revisión.
+
+**Consecuencias:** `main` y `sebastian` quedan alineados y la versión oficial incluye el tema oscuro, el snap móvil y la tarjeta nueva. Andrés debe revisar el cambio a posteriori; si algo del backend depende del alto de fila o del contenido de la tarjeta, este ADR es la referencia. Queda registrado que la fusión no pasó por revisión, para que la desviación no se repita por costumbre.
