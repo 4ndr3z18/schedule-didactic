@@ -1,11 +1,10 @@
 # MEMORY.md — UsachSchedule
 
 ## Estado
-- Fase 0 lista; Sebastián frontend, Andrés backend.
-- Contexto: `context/`; código: `src/`.
-- Frontera: `AGENTS.md`. Plan: `roadmap.md`. Contrato: `contracts.md`.
-- `main` es autoridad; ramas: `sebastian`, `andrez`.
+- Fase 2 escrita en `andrez`: migraciones, RLS, Zod, acciones, middleware.
+- Contratos cerrados (ADR-008) y frontera de clientes (ADR-009).
+- Frontend: Sebastián; backend: Andrés. `main` es autoridad.
 
 ## Pendiente
-- Contratos y ADR-004: Andrés. Scaffold: Sebastián.
+- Probar RLS con Supabase real y typecheck tras scaffold.
 - Nunca commitear `MEMORY.local.md` ni `.env.local`.

@@ -8,7 +8,7 @@ Repository name: `schedule-didactic`.
 
 ## Estado
 
-Fase 0 completada: convenciones, reparto de trabajo y contratos definidos. Siguiente: Fase 1 (scaffold de Next.js), ver [`context/roadmap.md`](./context/roadmap.md).
+Fase 0 completada: convenciones, reparto de trabajo y contratos definidos. Fase 2 (backend Supabase) escrita en la rama `andrez`; falta probarla contra un proyecto real. Siguiente en `main`: Fase 1 (scaffold de Next.js), ver [`context/roadmap.md`](./context/roadmap.md).
 
 ## Stack
 
@@ -42,7 +42,9 @@ context/                  Todo el contexto del proyecto.
   MEMORY.local.example.md Plantilla de memoria personal. Copiar a MEMORY.local.md.
   MEMORY.local.md         Memoria personal. Ignorada por git.
 src/                      Código de la aplicación (frontend y backend).
-supabase/                 Migraciones y políticas RLS.
+supabase/                 Migraciones, seed, configuración local y pruebas RLS.
+  migrations/             Esquema, triggers, restricciones y políticas RLS.
+  tests/rls.test.sql      Pruebas de aislamiento entre dos alumnos.
 .env.example              Variables de entorno requeridas.
 ```
 
@@ -85,3 +87,60 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```
 
 Nunca exponer la `service_role` key en el cliente ni commitear `.env.local`.
+
+## Backend (Supabase)
+
+El esquema vive en `supabase/migrations/20261022090000_init.sql`:
+
+| Tabla | Contenido |
+|---|---|
+| `profiles` | Datos del alumno. La fila la crea un trigger al registrarse en Auth. |
+| `subjects` | Asignaturas del alumno: nombre, código único, nivel 1–6 y color. |
+| `schedule_blocks` | Bloques del horario: día 1–6, módulo 1–10 y duración. |
+
+Reglas que impone la base, no solo la aplicación: RLS por `auth.uid()`, código único por alumno, bloques dentro de la jornada y prohibición de solapamientos (incluso con bloques de varios módulos).
+
+### Aplicar las migraciones
+
+Con la CLI de Supabase y Docker:
+
+```bash
+npx supabase start
+npx supabase db reset        # aplica migraciones + seed
+npx supabase test db         # pruebas pgTAP de RLS
+```
+
+Contra un proyecto en la nube, sin Docker: vincula el proyecto y empuja las migraciones.
+
+```bash
+npx supabase link --project-ref <ref>
+npx supabase db push
+```
+
+También puedes pegar el contenido de la migración en el SQL Editor del dashboard.
+
+### Regenerar los tipos
+
+`src/lib/supabase/database.types.ts` está escrito a mano con el formato de la CLI. Al conectar el proyecto real, reemplázalo por el generado:
+
+```bash
+npx supabase gen types typescript --project-id <ref> > src/lib/supabase/database.types.ts
+```
+
+### Rutas y sesión
+
+`middleware.ts` refresca la sesión en cada request. Sin sesión, `/horario` redirige a `/login?redirectTo=...`; con sesión, `/login` y `/registro` redirigen a `/horario`.
+
+### Estructura del backend
+
+```
+src/lib/constants/        Jornada (10 módulos × 90 min) y límites.
+src/lib/types/            Tipos de dominio y ActionResult.
+src/lib/validation/       Esquemas Zod compartidos con los formularios.
+src/lib/supabase/         Tipos de la base y cliente de navegador.
+src/server/supabase/      Cliente SSR y refresco de sesión.
+src/server/actions/       login, register, logout, CRUD de asignaturas y bloques, getSchedule.
+middleware.ts             Punto de entrada de Next.js.
+```
+
+Contrato completo (firmas, errores y constantes): [`context/contracts.md`](./context/contracts.md).

@@ -109,3 +109,42 @@ Reglas de la frontera:
 - El `AGENTS.md` de la raíz queda reducido a un **puntero**: OpenCode solo auto-carga el de la raíz, así que ese archivo lista el orden de lectura y las reglas que no se negocian, y delega el resto en `context/AGENTS.md`. Se mantiene deliberadamente corto.
 
 **Consecuencias:** Una única carpeta que un agente puede leer de principio a fin, y una raíz que se lee como un proyecto. Todos los enlaces internos cambian de `docs/x.md` a `context/x.md`; las referencias `docs/` que quedan escritas en ADR-001 a ADR-006 son históricas y describen el estado anterior. Cada vez que se agregue documentación nueva, va en `context/`, no en la raíz.
+
+---
+
+## ADR-008 — Modelo de datos definitivo y jornada (cierra ADR-004)
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada · **Sustituye a:** ADR-004 (Propuesta)
+
+**Contexto:** ADR-004 dejó abierto el modelo y la jornada. El diagrama inicial del producto proponía un catálogo global de asignaturas, una tabla `niveles` 1–6 y una matrícula estudiante↔asignatura. Se consultó al responsable del producto: se mantiene el modelo de **asignaturas por alumno** de ADR-004, sin catálogo global ni matrícula, y se fija la jornada en **10 módulos de 90 minutos desde las 08:15, lunes a sábado**.
+
+**Decisión:**
+
+- Tablas: `profiles`, `subjects` (con `user_id`) y `schedule_blocks` (con `user_id` y `subject_id`). No se crean `levels` ni `student_subjects`: el nivel es un entero 1–6 validado por `check`.
+- Un ramo de varios módulos se guarda como **un bloque con `duration`**, no como filas independientes.
+- `subjects` tiene `unique (user_id, code)` y el código se normaliza a mayúsculas antes de guardar.
+- `schedule_blocks` referencia `(subject_id, user_id)` contra `unique (id, user_id)` de `subjects`: la base impide usar la asignatura de otro alumno, además de RLS.
+- Los solapamientos se impiden con una restricción de exclusión GiST sobre `int4range(module_index, module_index + duration)`, no solo con un `unique` de módulo inicial. Requiere `btree_gist`.
+- Jornada: `TOTAL_MODULES = 10`, `MODULE_MINUTES = 90`, `FIRST_MODULE_START = '08:15'`, `INCLUDE_SATURDAY = true`, días 1–6. Módulos consecutivos, sin recreos modelados.
+- RLS activo en las tres tablas, con `auth.uid() = user_id` (o `= id` en `profiles`) en `SELECT`, `INSERT`, `UPDATE` y `DELETE`. El rol `anon` no tiene privilegios.
+- No se usa `FORCE ROW LEVEL SECURITY`: el trigger `handle_new_user` es `security definer` y necesita insertar el perfil como dueño de la tabla. El acceso por API usa `authenticated`, que sí queda sujeto a RLS.
+- El límite de 24 asignaturas por alumno se aplica en la Server Action; no se impone con trigger.
+
+**Consecuencias:** El modelo queda cerrado y las reglas críticas viven en la base, no solo en la aplicación. Si más adelante se quiere catálogo compartido de asignaturas, hace falta un ADR nuevo que migre `subjects` y agregue la matrícula. Los recreos entre módulos no están representados; si se necesitan, se cambia la constante y el cálculo de horarios en `src/lib/constants/schedule.ts`.
+
+---
+
+## ADR-009 — Ubicación de clientes y tipos de Supabase
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada
+
+**Contexto:** `roadmap.md` pedía `src/server/supabase/` con «clientes SSR y `database.types.ts` generado», pero `AGENTS.md` prohíbe que el frontend importe `src/server/supabase/*`. El cliente de navegador y los tipos los necesita el frontend, así que dejarlos en `src/server/` habría contradicho la frontera.
+
+**Decisión:**
+
+- `src/lib/supabase/database.types.ts`: solo tipos, importable por ambos lados.
+- `src/lib/supabase/client.ts`: cliente de navegador con la clave anónima, para Client Components.
+- `src/server/supabase/server.ts`, `src/server/supabase/middleware.ts` y `src/server/actions/`: backend puro.
+- Mientras no exista el scaffold de Next.js ni la CLI, `database.types.ts` se mantiene escrito a mano con el formato de `supabase gen types`. Cuando el proyecto real esté conectado se regenera y se reemplaza el archivo.
+
+**Consecuencias:** La frontera se respeta sin duplicar tipos. El riesgo de que los tipos escritos a mano se desvíen del esquema se cubre regenerándolos en cuanto la Fase 1 esté lista y el proyecto de Supabase exista.

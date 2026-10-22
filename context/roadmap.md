@@ -4,7 +4,7 @@ Plan de construcción acordado. Cada fase termina en un PR revisado por la otra 
 
 Reparto: **Sebastián hace el frontend**, **Andrés hace el backend**. La frontera está en `context/AGENTS.md` § 3.
 
-Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos definidos).
+Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos definidos). **Fase 2 escrita** en la rama `andrez`: falta probar las migraciones contra un proyecto Supabase real y ejecutar `typecheck` cuando exista el scaffold.
 
 ---
 
@@ -21,17 +21,18 @@ Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos
 
 ## Fase 2 — Backend: Supabase, RLS y auth · Andrés
 
-- [ ] Proyecto Supabase y `.env.local` (no se commitea).
-- [ ] `context/contracts.md` completo: tipos de dominio, constantes de la jornada y firma de las Server Actions.
-- [ ] Migración inicial de `profiles`, `subjects`, `schedule_blocks`.
-- [ ] Trigger de creación de perfil al registrarse.
-- [ ] RLS activo con `auth.uid() = user_id` en `SELECT`, `INSERT`, `UPDATE` y `DELETE`.
-- [ ] `src/server/supabase/` con clientes SSR y `database.types.ts` generado.
-- [ ] `src/lib/validation/` con los esquemas Zod de login, registro, asignatura y bloque.
-- [ ] `src/server/actions/` con las acciones de auth y CRUD.
-- [ ] `middleware.ts` con refresco de sesión y protección de `/horario`.
+- [ ] Proyecto Supabase y `.env.local` (no se commitea). **Pendiente: requiere credenciales.**
+- [x] `context/contracts.md` completo: tipos de dominio, constantes de la jornada y firma de las Server Actions.
+- [x] Migración inicial de `profiles`, `subjects`, `schedule_blocks` (`supabase/migrations/20261022090000_init.sql`).
+- [x] Trigger de creación de perfil al registrarse.
+- [x] RLS activo con `auth.uid() = user_id` en `SELECT`, `INSERT`, `UPDATE` y `DELETE`.
+- [x] `src/lib/supabase/` y `src/server/supabase/` con clientes SSR y `database.types.ts` (escrito a mano; se regenera con la CLI).
+- [x] `src/lib/validation/` con los esquemas Zod de login, registro, asignatura y bloque.
+- [x] `src/server/actions/` con las acciones de auth y CRUD.
+- [x] `middleware.ts` con refresco de sesión y protección de `/horario`.
+- [x] Pruebas pgTAP de aislamiento entre dos alumnos (`supabase/tests/rls.test.sql`).
 
-**Terminado cuando:** dos usuarios de prueba no pueden leer ni modificar los datos del otro, verificado manualmente y documentado en el PR.
+**Terminado cuando:** dos usuarios de prueba no pueden leer ni modificar los datos del otro, verificado manualmente y documentado en el PR. Las pruebas pgTAP están escritas; falta ejecutarlas con `supabase test db` contra un proyecto real.
 
 ## Fase 3 — Grilla del horario (estática) · Sebastián
 
