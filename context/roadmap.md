@@ -21,18 +21,18 @@ Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos
 
 ## Fase 2 — Backend: Supabase, RLS y auth · Andrés
 
-- [ ] Proyecto Supabase y `.env.local` (no se commitea). **Pendiente: requiere credenciales.**
+- [x] Proyecto Supabase y `.env.local` (no se commitea). Proyecto `schedule-didactic` (`ceibrnyeznqqsnkslmpw`, `us-east-1`).
 - [x] `context/contracts.md` completo: tipos de dominio, constantes de la jornada y firma de las Server Actions.
-- [x] Migración inicial de `profiles`, `subjects`, `schedule_blocks` (`supabase/migrations/20261022090000_init.sql`).
+- [x] Migración inicial de `profiles`, `subjects`, `schedule_blocks` (`supabase/migrations/20261022061151_initial_schema.sql`) y migración de índice (`20261022061429_index_subject_owner_fk.sql`).
 - [x] Trigger de creación de perfil al registrarse.
 - [x] RLS activo con `auth.uid() = user_id` en `SELECT`, `INSERT`, `UPDATE` y `DELETE`.
-- [x] `src/lib/supabase/` y `src/server/supabase/` con clientes SSR y `database.types.ts` (escrito a mano; se regenera con la CLI).
+- [x] `src/lib/supabase/` y `src/server/supabase/` con clientes SSR y `database.types.ts` generado desde el proyecto real.
 - [x] `src/lib/validation/` con los esquemas Zod de login, registro, asignatura y bloque.
 - [x] `src/server/actions/` con las acciones de auth y CRUD.
 - [x] `middleware.ts` con refresco de sesión y protección de `/horario`.
 - [x] Pruebas pgTAP de aislamiento entre dos alumnos (`supabase/tests/rls.test.sql`).
 
-**Terminado cuando:** dos usuarios de prueba no pueden leer ni modificar los datos del otro, verificado manualmente y documentado en el PR. Las pruebas pgTAP están escritas; falta ejecutarlas con `supabase test db` contra un proyecto real.
+**Terminado cuando:** dos usuarios de prueba no pueden leer ni modificar los datos del otro, verificado manualmente y documentado en el PR. **Verificado en remoto el 2026-10-22** con dos usuarios temporales: RLS, FK compuesta, exclusión de solapamientos, límites de jornada, código duplicado y cascadas pasaron; los usuarios de prueba se eliminaron.
 
 ## Fase 3 — Grilla del horario (estática) · Sebastián
 

@@ -2,7 +2,7 @@
 
 Documento puente entre las dos mitades del proyecto. **Lo mantiene el backend (Andrés)**; el frontend lo consume. Cualquier cambio se avisa en el PR antes de aplicarlo, porque rompe tipos en ambos lados.
 
-Estado: **cerrado para la Fase 2** (2026-10-22). Implementado en `supabase/migrations/20261022090000_init.sql`, `src/lib/validation/` y `src/server/actions/`.
+Estado: **cerrado para la Fase 2** (2026-10-22). Implementado en `supabase/migrations/20261022061151_initial_schema.sql`, `src/lib/validation/` y `src/server/actions/`; aplicado al proyecto remoto `ceibrnyeznqqsnkslmpw`.
 
 ---
 

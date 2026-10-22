@@ -148,3 +148,22 @@ Reglas de la frontera:
 - Mientras no exista el scaffold de Next.js ni la CLI, `database.types.ts` se mantiene escrito a mano con el formato de `supabase gen types`. Cuando el proyecto real esté conectado se regenera y se reemplaza el archivo.
 
 **Consecuencias:** La frontera se respeta sin duplicar tipos. El riesgo de que los tipos escritos a mano se desvíen del esquema se cubre regenerándolos en cuanto la Fase 1 esté lista y el proyecto de Supabase exista.
+
+---
+
+## ADR-010 — Proyecto Supabase remoto y aplicación de la Fase 2
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada
+
+**Contexto:** El backend estaba escrito pero sin proyecto real. Se creó el proyecto remoto `schedule-didactic` (`ceibrnyeznqqsnkslmpw`, región `us-east-1`, plan gratuito) en la organización `ultravios`, y se aplicó el esquema mediante la integración de Supabase.
+
+**Decisión:**
+
+- El proyecto remoto es la referencia para desarrollo y despliegue. `context/MEMORY.md` y `README.md` guardan su `ref`.
+- Las migraciones quedaron registradas en remoto como `20261022061151_initial_schema` y `20261022061429_index_subject_owner_fk`. Los archivos locales se renombraron a esos mismos prefijos para que `supabase db push` no intente reaplicarlas.
+- `database.types.ts` se genera desde el proyecto con `generate_typescript_types` y se versiona. No se edita a mano.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` contiene la **publishable key** (`sb_publishable_...`), equivalente moderno de la anon key. `.env.local` permanece fuera de git.
+- El advisor de rendimiento detectó que la FK compuesta `(subject_id, user_id)` no tenía índice de cobertura. Se agregó `schedule_blocks_subject_owner_idx` y se eliminó el índice redundante por `subject_id`.
+- El proyecto remoto tiene la confirmación de correo activada (`mailer_autoconfirm: false`), a diferencia de `supabase/config.toml`, que la desactiva en local. La UI debe manejar el caso «revisa tu correo» al registrarse.
+
+**Consecuencias:** El backend está operativo en Supabase y el acceso anónimo devuelve `42501`. `supabase db push` debe ser un no-op salvo por migraciones nuevas. La verificación de RLS y restricciones se hizo con dos usuarios temporales creados por SQL y eliminados al terminar; no quedan datos de prueba. Si se quiere probar el registro sin confirmar correo, se cambia en el dashboard solo en un proyecto de desarrollo, nunca en producción.

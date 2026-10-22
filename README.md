@@ -88,9 +88,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 Nunca exponer la `service_role` key en el cliente ni commitear `.env.local`.
 
+El proyecto remoto tiene la confirmación de correo activada: al registrarse, Supabase responde sin sesión y la UI debe mostrar «revisa tu correo». En local, `supabase/config.toml` la desactiva para agilizar las pruebas.
+
 ## Backend (Supabase)
 
-El esquema vive en `supabase/migrations/20261022090000_init.sql`:
+El esquema vive en `supabase/migrations/20261022061151_initial_schema.sql`. Proyecto remoto: **`schedule-didactic`** (`ceibrnyeznqqsnkslmpw`, `us-east-1`), con las dos migraciones aplicadas y el aislamiento RLS verificado con dos usuarios reales.
 
 | Tabla | Contenido |
 |---|---|
@@ -121,10 +123,10 @@ También puedes pegar el contenido de la migración en el SQL Editor del dashboa
 
 ### Regenerar los tipos
 
-`src/lib/supabase/database.types.ts` está escrito a mano con el formato de la CLI. Al conectar el proyecto real, reemplázalo por el generado:
+`src/lib/supabase/database.types.ts` ya fue generado desde el proyecto real con `generate_typescript_types`. Regénéralo cada vez que cambie el esquema:
 
 ```bash
-npx supabase gen types typescript --project-id <ref> > src/lib/supabase/database.types.ts
+npx supabase gen types typescript --project-id ceibrnyeznqqsnkslmpw > src/lib/supabase/database.types.ts
 ```
 
 ### Rutas y sesión

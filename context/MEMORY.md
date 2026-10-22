@@ -1,10 +1,11 @@
 # MEMORY.md — UsachSchedule
 
 ## Estado
-- Fase 2 escrita en `andrez`: migraciones, RLS, Zod, acciones, middleware.
-- Contratos cerrados (ADR-008) y frontera de clientes (ADR-009).
+- Fase 2 aplicada en `schedule-didactic` (`ceibrnyeznqqsnkslmpw`): RLS verificado, tipos generados y `.env.local` listo.
+- El proyecto remoto exige confirmación de correo al registrarse.
 - Frontend: Sebastián; backend: Andrés. `main` es autoridad.
 
 ## Pendiente
-- Probar RLS con Supabase real y typecheck tras scaffold.
+- Scaffold y typecheck con `package.json` de la Fase 1.
+- PR de `andrez` a `main`.
 - Nunca commitear `MEMORY.local.md` ni `.env.local`.
