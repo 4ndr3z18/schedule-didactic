@@ -1,10 +1,10 @@
 # MEMORY.md — UsachSchedule
 
 ## Estado
-- Fase 0 lista; Sebastián frontend, Andrés backend.
-- Frontera: `AGENTS.md`. Plan: `docs/roadmap.md`. Contrato: `docs/contracts.md`.
-- `main` es autoridad; se trabaja en `sebastian` o `andrez`.
+- Fase 1 y grilla estática listas en `sebastian`; falta drag & drop e integración.
+- Andrés: backend (`src/server/`). Sebastián: frontend (`src/app/`, `src/components/`).
+- Reglas: `AGENTS.md`; plan y contrato en `docs/`.
 
 ## Pendiente
-- Contratos y ADR-004: Andrés. Scaffold: Sebastián.
+- Fase 4: drag & drop y edición.
 - Nunca commitear `MEMORY.local.md` ni `.env.local`.

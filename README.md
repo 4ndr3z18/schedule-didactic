@@ -8,7 +8,7 @@ Repository name: `schedule-didactic`.
 
 ## Estado
 
-Fase 0 completada: convenciones y plan definidos. Siguiente: Fase 1 (scaffold de Next.js), ver [`docs/roadmap.md`](./docs/roadmap.md).
+Fase 1 completada y Fase 3 en curso: la app corre con Next.js, la grilla semanal estática funciona con datos de ejemplo y ya se puede descargar como PNG. Falta la Fase 4 (drag & drop) y la Fase 5 (integración con Supabase). Detalle en [`docs/roadmap.md`](./docs/roadmap.md).
 
 ## Stack
 
@@ -17,7 +17,7 @@ Fase 0 completada: convenciones y plan definidos. Siguiente: Fase 1 (scaffold de
 | Framework | Next.js (App Router) |
 | Lenguaje | TypeScript (`strict: true`) |
 | Estilos | Tailwind CSS |
-| Componentes | shadcn/ui (Radix Primitives) |
+| Componentes | shadcn/ui (Base UI) |
 | Datos y Auth | Supabase (Postgres + Auth + RLS) |
 | Validación | Zod |
 | Formularios | React Hook Form + resolvers |
@@ -59,15 +59,39 @@ Dos desarrolladores, cada uno con su propia sesión de OpenCode. Reglas completa
 
 Qué construir y en qué orden: [`docs/roadmap.md`](./docs/roadmap.md).
 
-## Puesta en marcha (cuando exista el scaffold)
+## Puesta en marcha
 
 ```bash
 npm install
-cp .env.example .env.local   # completar con las credenciales de Supabase
-npm run dev
+cp .env.example .env.local   # completar cuando exista el proyecto de Supabase
+npm run dev                  # http://localhost:3000
 ```
 
+Scripts disponibles:
+
+| Script | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo. |
+| `npm run build` | Build de producción. |
+| `npm run lint` | ESLint. |
+| `npm run typecheck` | `tsc --noEmit`. |
+| `npm run format` | Prettier sobre todo el repo. |
+| `npm run format:check` | Verifica formato sin escribir. |
+
 En Windows con PowerShell, si `npm` está bloqueado por la política de ejecución de scripts, usar `npm.cmd` o `cmd /c npm ...`.
+
+### Estructura del código
+
+```
+src/app/(app)/layout.tsx          Shell: header y contenedor
+src/app/(app)/horario/            Página del horario, loading y error
+src/components/schedule/          Grilla, tarjetas, panel y estados
+src/components/ui/                Componentes de shadcn/ui
+src/lib/schedule/                 Constantes de la jornada, paleta y datos de ejemplo
+src/lib/types/domain.ts           Tipos compartidos con el backend
+```
+
+La grilla usa `src/lib/schedule/constants.ts` como única fuente de los módulos: 9 bloques de 80 minutos, lunes a sábado.
 
 ### Variables de entorno
 

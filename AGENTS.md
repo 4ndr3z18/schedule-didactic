@@ -73,7 +73,7 @@ No hay memoria compartida entre sesiones ni entre las dos IAs: **lo que no quede
   | **Framework** | **Next.js** (App Router) | Server Components para datos de usuario y Server Actions para autenticación y mutaciones de horarios. |
   | **Lenguaje** | **TypeScript** (`strict: true`) | Tipado estricto para modelos de dominio (asignaturas, bloques horarios, usuarios). |
   | **Estilos** | **Tailwind CSS** | Diseño responsivo, componentes compartidos y sistema de diseño adaptado al formato USACH. |
-  | **Componentes UI** | **shadcn/ui** (Radix Primitives) | Primitivas accesibles (diálogos, menús desplegables, tarjetas interactivas). |
+  | **Componentes UI** | **shadcn/ui** (Base UI) | Primitivas accesibles (diálogos, menús desplegables, tarjetas interactivas). |
   | **Base de Datos & Auth** | **Supabase** (Postgres + Auth) | Almacenamiento relacional de usuarios, asignaturas y horarios con Row Level Security (RLS). |
   | **Validación** | **Zod** | Esquemas de validación unificados en cliente y servidor para asignaturas y credenciales. |
   | **Formularios** | **React Hook Form** + Resolvers | Gestión eficiente de formularios de login y edición de tarjetas de asignaturas. |
@@ -147,3 +147,13 @@ El protocolo completo está en "Comunicación entre agentes". En git, el cierre 
 
 ### Regla anti-deriva entre IAs
 Si dos agentes proponen cosas distintas (librería, nombre de tabla, formato de fecha), **gana lo escrito en `main`**. Si no está escrito, se escribe la decisión en `docs/decisions.md` antes de implementarla.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
