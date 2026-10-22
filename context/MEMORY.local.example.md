@@ -1,6 +1,6 @@
 # MEMORY.local.md — <tu nombre> (personal, NO se commitea)
 
-> Copia este archivo como `MEMORY.local.md` en la raíz del repo y bórralo de tu lista de cambios.
+> Copia este archivo como `context/MEMORY.local.md` y bórralo de tu lista de cambios.
 > `MEMORY.local.md` está en `.gitignore`: nunca se sube.
 > Este ejemplo sí está versionado para que ambos tengamos el mismo formato.
 

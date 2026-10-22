@@ -92,3 +92,20 @@ Reglas de la frontera:
 4. `docs/contracts.md`, mantenido por el backend, es el puente: tipos, constantes de la jornada y firmas de las acciones.
 
 **Consecuencias:** Cada quien puede trabajar sin esperar al otro: el backend escribe migraciones y RLS sin el scaffold de Next.js, y el frontend construye la grilla con datos mock. A cambio, el contrato (`docs/contracts.md`) se vuelve crítico: si diverge, la Fase 5 se convierte en arqueología. ADR-004 queda bajo responsabilidad del backend.
+
+---
+
+## ADR-007 — Separar el contexto del código en `context/`
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada
+
+**Contexto:** El contrato, la memoria compartida y la documentación vivían sueltos en la raíz, mezclados con la configuración y, más adelante, con el código de la aplicación. Un agente que entraba al repositorio tenía que descubrir archivos dispersos (`AGENTS.md`, `MEMORY.md`, `docs/*.md`) y la raíz se volvía un índice de documentos en vez de un índice de proyecto. Además, cuando llegue el scaffold de Next.js, esos archivos competirían visualmente con `package.json`, `src/` y la configuración.
+
+**Decisión:** Concentrar todo el contexto en `context/`:
+
+- `context/AGENTS.md` (contrato técnico), `context/roadmap.md`, `context/contracts.md`, `context/decisions.md`, `context/MEMORY.md` y `context/MEMORY.local.example.md`.
+- `context/MEMORY.local.md` sigue siendo personal y sigue ignorado por `.gitignore`.
+- La raíz conserva solo `AGENTS.md`, `README.md`, `.env.example`, `.gitignore` y, próximamente, el código.
+- El `AGENTS.md` de la raíz queda reducido a un **puntero**: OpenCode solo auto-carga el de la raíz, así que ese archivo lista el orden de lectura y las reglas que no se negocian, y delega el resto en `context/AGENTS.md`. Se mantiene deliberadamente corto.
+
+**Consecuencias:** Una única carpeta que un agente puede leer de principio a fin, y una raíz que se lee como un proyecto. Todos los enlaces internos cambian de `docs/x.md` a `context/x.md`; las referencias `docs/` que quedan escritas en ADR-001 a ADR-006 son históricas y describen el estado anterior. Cada vez que se agregue documentación nueva, va en `context/`, no en la raíz.

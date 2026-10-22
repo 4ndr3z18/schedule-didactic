@@ -1,8 +1,8 @@
 # Roadmap — UsachSchedule
 
-Plan de construcción acordado. Cada fase termina en un PR revisado por la otra persona. Los criterios de calidad están en `AGENTS.md` § 4.
+Plan de construcción acordado. Cada fase termina en un PR revisado por la otra persona. Los criterios de calidad están en `context/AGENTS.md` § 4.
 
-Reparto: **Sebastián hace el frontend**, **Andrés hace el backend**. La frontera está en `AGENTS.md` § 3.
+Reparto: **Sebastián hace el frontend**, **Andrés hace el backend**. La frontera está en `context/AGENTS.md` § 3.
 
 Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos definidos).
 
@@ -22,7 +22,7 @@ Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos
 ## Fase 2 — Backend: Supabase, RLS y auth · Andrés
 
 - [ ] Proyecto Supabase y `.env.local` (no se commitea).
-- [ ] `docs/contracts.md` completo: tipos de dominio, constantes de la jornada y firma de las Server Actions.
+- [ ] `context/contracts.md` completo: tipos de dominio, constantes de la jornada y firma de las Server Actions.
 - [ ] Migración inicial de `profiles`, `subjects`, `schedule_blocks`.
 - [ ] Trigger de creación de perfil al registrarse.
 - [ ] RLS activo con `auth.uid() = user_id` en `SELECT`, `INSERT`, `UPDATE` y `DELETE`.
@@ -35,7 +35,7 @@ Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos
 
 ## Fase 3 — Grilla del horario (estática) · Sebastián
 
-No depende de la base de datos: avanza con datos mock tipados según `docs/contracts.md`.
+No depende de la base de datos: avanza con datos mock tipados según `context/contracts.md`.
 
 - [ ] Layout de la app: header, sidebar colapsable en móvil (Sheet de shadcn), área de contenido.
 - [ ] Grilla semanal formato USACH: días en columnas, módulos en filas, encabezado de horas.
@@ -63,7 +63,7 @@ No depende de la base de datos: avanza con datos mock tipados según `docs/contr
 - [ ] Páginas de login y registro consumiendo las acciones de Andrés, con sus errores mapeados.
 - [ ] Revisión cruzada de RLS y de accesibilidad.
 - [ ] Revisión visual final en móvil y escritorio.
-- [ ] `MEMORY.md`, `docs/decisions.md`, `docs/contracts.md` y `README.md` al día.
+- [ ] `context/MEMORY.md`, `context/decisions.md`, `context/contracts.md` y `README.md` al día.
 - [ ] Merge final a `main` y despliegue en Vercel.
 
 ---
@@ -73,13 +73,13 @@ No depende de la base de datos: avanza con datos mock tipados según `docs/contr
 | Quién | Empieza con | No toca |
 |---|---|---|
 | Sebastián | Fase 1 (scaffold, Tailwind, shadcn, CI) → Fase 3 (grilla con mock) → Fase 4 | `supabase/`, `src/server/`, `src/lib/validation/`, `middleware.ts` |
-| Andrés | `docs/contracts.md` → Fase 2 (migraciones, RLS, auth, acciones) | `src/app/`, `src/components/`, `src/lib/types/domain.ts` sin avisar |
+| Andrés | `context/contracts.md` → Fase 2 (migraciones, RLS, auth, acciones) | `src/app/`, `src/components/`, `src/lib/types/domain.ts` sin avisar |
 
-`src/lib/types/domain.ts` es compartido: debe reflejar `docs/contracts.md`. Cualquier cambio se avisa en el PR.
+`src/lib/types/domain.ts` es compartido: debe reflejar `context/contracts.md`. Cualquier cambio se avisa en el PR.
 
 ## Dependencias críticas
 
-1. **`docs/contracts.md`** estabiliza los tipos: sin él, el mock del frontend y el esquema del backend divergen y la Fase 5 se vuelve arqueología. No bloquea la maqueta visual, sí el tipado.
+1. **`context/contracts.md`** estabiliza los tipos: sin él, el mock del frontend y el esquema del backend divergen y la Fase 5 se vuelve arqueología. No bloquea la maqueta visual, sí el tipado.
 2. **Fase 1** bloquea la Fase 3 y la Fase 4, y también los clientes de Supabase de la Fase 2. Las migraciones SQL, en cambio, se pueden escribir antes.
 3. **Fase 2** bloquea el final de la Fase 4 (persistencia) y de la Fase 5.
 4. Los esquemas Zod nacen en la Fase 2 y los consumen los formularios de la Fase 3 y 4: se escriben una vez, en `src/lib/validation/`.

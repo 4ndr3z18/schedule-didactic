@@ -8,7 +8,7 @@ Repository name: `schedule-didactic`.
 
 ## Estado
 
-Fase 0 completada: convenciones y plan definidos. Siguiente: Fase 1 (scaffold de Next.js), ver [`docs/roadmap.md`](./docs/roadmap.md).
+Fase 0 completada: convenciones, reparto de trabajo y contratos definidos. Siguiente: Fase 1 (scaffold de Next.js), ver [`context/roadmap.md`](./context/roadmap.md).
 
 ## Stack
 
@@ -24,18 +24,26 @@ Fase 0 completada: convenciones y plan definidos. Siguiente: Fase 1 (scaffold de
 | Drag & Drop | @dnd-kit |
 | Iconos | lucide-react |
 
-El detalle de reglas, estilo y criterios de aceptación está en [`AGENTS.md`](./AGENTS.md).
+El detalle de reglas, estilo y criterios de aceptación está en [`context/AGENTS.md`](./context/AGENTS.md).
 
 ## Estructura del repositorio
 
+El contexto y el código viven separados: nada de documentación suelta en la raíz.
+
 ```
-AGENTS.md                 Punto de partida. Contrato técnico y de trabajo.
-docs/roadmap.md           Fases, tareas, responsables y dependencias.
-docs/contracts.md         Puente frontend/backend: tipos, constantes y acciones.
-docs/decisions.md         Decisiones (ADR) con su justificación.
-MEMORY.md                 Estado compartido y acotado (máximo 50 palabras).
-MEMORY.local.example.md   Plantilla de memoria personal. Copiar a MEMORY.local.md.
-MEMORY.local.md           Tu memoria personal. Ignorada por git.
+AGENTS.md                 Puntero de entrada para cualquier agente. Apunta a context/.
+README.md                 Este archivo.
+context/                  Todo el contexto del proyecto.
+  AGENTS.md               Contrato técnico y de trabajo.
+  roadmap.md              Fases, tareas, responsables y dependencias.
+  contracts.md            Puente frontend/backend: tipos, constantes y acciones.
+  decisions.md            Decisiones (ADR) con su justificación.
+  MEMORY.md               Estado compartido y acotado (máximo 50 palabras).
+  MEMORY.local.example.md Plantilla de memoria personal. Copiar a MEMORY.local.md.
+  MEMORY.local.md         Memoria personal. Ignorada por git.
+src/                      Código de la aplicación (frontend y backend).
+supabase/                 Migraciones y políticas RLS.
+.env.example              Variables de entorno requeridas.
 ```
 
 ## Reparto del trabajo
@@ -45,19 +53,19 @@ MEMORY.local.md           Tu memoria personal. Ignorada por git.
 | Sebastián | Frontend | `src/app/`, `src/components/`, scaffold, Tailwind, shadcn/ui, CI. |
 | Andrés | Backend | `supabase/`, `src/server/`, `src/lib/validation/`, `middleware.ts`. |
 
-La frontera completa está en [`AGENTS.md` § 3](./AGENTS.md). El frontend consume Server Actions y tipos; nunca importa `src/server/supabase/*`. El puente entre ambos es [`docs/contracts.md`](./docs/contracts.md).
+La frontera completa está en [`context/AGENTS.md` § 3](./context/AGENTS.md). El frontend consume Server Actions y tipos; nunca importa `src/server/supabase/*`. El puente entre ambos es [`context/contracts.md`](./context/contracts.md).
 
 ## Trabajo en equipo
 
-Dos desarrolladores, cada uno con su propia sesión de OpenCode. Reglas completas en [`AGENTS.md`](./AGENTS.md), secciones "Punto de entrada" y "Trabajo en Equipo y Control de Versiones".
+Dos desarrolladores, cada uno con su propia sesión de OpenCode. Reglas completas en [`context/AGENTS.md`](./context/AGENTS.md), secciones "Punto de entrada" y "Trabajo en Equipo y Control de Versiones".
 
 1. `git pull --rebase origin main` antes de empezar.
 2. Trabajar en la rama personal (`sebastian`, `andrez`). Nunca commitear directo a `main`.
 3. Integrar por Pull Request con revisión del compañero.
-4. Al cerrar la tarea: actualizar `MEMORY.local.md`, `MEMORY.md` (si afecta al compañero) y `docs/decisions.md`.
-5. Si no tienes `MEMORY.local.md`, copia `MEMORY.local.example.md`; el archivo resultante queda fuera de git.
+4. Al cerrar la tarea: actualizar `context/MEMORY.local.md`, `context/MEMORY.md` (si afecta al compañero) y `context/decisions.md`.
+5. Si no tienes `context/MEMORY.local.md`, copia `context/MEMORY.local.example.md`; el archivo resultante queda fuera de git.
 
-Qué construir y en qué orden: [`docs/roadmap.md`](./docs/roadmap.md).
+Qué construir y en qué orden: [`context/roadmap.md`](./context/roadmap.md).
 
 ## Puesta en marcha (cuando exista el scaffold)
 

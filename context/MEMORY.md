@@ -2,8 +2,9 @@
 
 ## Estado
 - Fase 0 lista; Sebastián frontend, Andrés backend.
-- Frontera: `AGENTS.md`. Plan: `docs/roadmap.md`. Contrato: `docs/contracts.md`.
-- `main` es autoridad; se trabaja en `sebastian` o `andrez`.
+- Contexto: `context/`; código: `src/`.
+- Frontera: `AGENTS.md`. Plan: `roadmap.md`. Contrato: `contracts.md`.
+- `main` es autoridad; ramas: `sebastian`, `andrez`.
 
 ## Pendiente
 - Contratos y ADR-004: Andrés. Scaffold: Sebastián.
