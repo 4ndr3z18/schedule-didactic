@@ -1,10 +1,10 @@
 # MEMORY.md — UsachSchedule
 
 ## Estado
-- Fase 0 lista; sigue Fase 1 (scaffold).
-- Reglas: `AGENTS.md`. Plan: `docs/roadmap.md`. Decisiones: `docs/decisions.md`.
+- Fase 0 lista; Sebastián frontend, Andrés backend.
+- Frontera: `AGENTS.md`. Plan: `docs/roadmap.md`. Contrato: `docs/contracts.md`.
 - `main` es autoridad; se trabaja en `sebastian` o `andrez`.
 
 ## Pendiente
-- Confirmar ADR-004 (módulos USACH) antes de la migración.
+- Contratos y ADR-004: Andrés. Scaffold: Sebastián.
 - Nunca commitear `MEMORY.local.md` ni `.env.local`.

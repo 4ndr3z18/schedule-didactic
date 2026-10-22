@@ -31,11 +31,21 @@ El detalle de reglas, estilo y criterios de aceptación está en [`AGENTS.md`](.
 ```
 AGENTS.md                 Punto de partida. Contrato técnico y de trabajo.
 docs/roadmap.md           Fases, tareas, responsables y dependencias.
+docs/contracts.md         Puente frontend/backend: tipos, constantes y acciones.
 docs/decisions.md         Decisiones (ADR) con su justificación.
 MEMORY.md                 Estado compartido y acotado (máximo 50 palabras).
 MEMORY.local.example.md   Plantilla de memoria personal. Copiar a MEMORY.local.md.
 MEMORY.local.md           Tu memoria personal. Ignorada por git.
 ```
+
+## Reparto del trabajo
+
+| Quién | Capa | Rutas |
+|---|---|---|
+| Sebastián | Frontend | `src/app/`, `src/components/`, scaffold, Tailwind, shadcn/ui, CI. |
+| Andrés | Backend | `supabase/`, `src/server/`, `src/lib/validation/`, `middleware.ts`. |
+
+La frontera completa está en [`AGENTS.md` § 3](./AGENTS.md). El frontend consume Server Actions y tipos; nunca importa `src/server/supabase/*`. El puente entre ambos es [`docs/contracts.md`](./docs/contracts.md).
 
 ## Trabajo en equipo
 

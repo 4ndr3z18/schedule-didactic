@@ -48,7 +48,7 @@ Estados: `Aceptada` · `Propuesta` · `Sustituida por ADR-XXX`
 
 ## ADR-004 — Modelo de datos del horario
 
-**Fecha:** 2026-10-22 · **Estado:** Propuesta (pendiente de confirmar entre ambos antes de la primera migración)
+**Fecha:** 2026-10-22 · **Estado:** Propuesta (la define el backend; ver ADR-006)
 
 **Propuesta inicial:**
 
@@ -69,3 +69,26 @@ Estados: `Aceptada` · `Propuesta` · `Sustituida por ADR-XXX`
 **Fecha:** 2026-10-22 · **Estado:** Aceptada
 
 **Decisión:** El producto se llama **UsachSchedule** en la interfaz, documentación y nombres de componentes. `schedule-didactic` se mantiene solo como nombre del repositorio en GitHub (no se renombra para no romper clones existentes).
+
+---
+
+## ADR-006 — Reparto frontend / backend entre los dos desarrolladores
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada
+
+**Contexto:** El reparto inicial era por pantallas (uno tomaba auth y base de datos, el otro el calendario), lo que dejaba a cada persona editando archivos del otro: el formulario de login es frontend, pero la acción que crea la sesión es backend; el drag & drop es frontend, pero la mutación que persiste el bloque es backend.
+
+**Decisión:** El reparto pasa a ser por capa, con una frontera verificable por carpeta:
+
+- **Frontend (Sebastián):** `src/app/`, `src/components/`, scaffold, Tailwind, shadcn/ui, CI.
+- **Backend (Andrés):** `supabase/`, `src/server/`, `src/lib/validation/`, `middleware.ts`.
+- **Compartido:** `src/lib/types/domain.ts`, `AGENTS.md`, `MEMORY.md`, `README.md` y `docs/`.
+
+Reglas de la frontera:
+
+1. El frontend nunca importa `src/server/supabase/*`; consume Server Actions y tipos.
+2. Las Server Actions devuelven `{ ok: true, data }` o `{ ok: false, errors }`; la UI no conoce errores de Postgres.
+3. Los esquemas Zod viven en `src/lib/validation/` y se usan en ambos lados, sin duplicar reglas.
+4. `docs/contracts.md`, mantenido por el backend, es el puente: tipos, constantes de la jornada y firmas de las acciones.
+
+**Consecuencias:** Cada quien puede trabajar sin esperar al otro: el backend escribe migraciones y RLS sin el scaffold de Next.js, y el frontend construye la grilla con datos mock. A cambio, el contrato (`docs/contracts.md`) se vuelve crítico: si diverge, la Fase 5 se convierte en arqueología. ADR-004 queda bajo responsabilidad del backend.

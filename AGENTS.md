@@ -12,19 +12,22 @@ Si es tu primera sesión en este repositorio, **no tienes el contexto de las con
 
 | Persona | GitHub | Rama | Es dueña de |
 |---|---|---|---|
-| Sebastián | `s3b4s19` | `sebastian` | `supabase/`, `src/lib/supabase/`, `src/app/(auth)/` |
-| Andrés | `4ndr3z18` | `andrez` | `src/components/schedule/`, `src/app/(app)/horario/` |
+| Sebastián | `s3b4s19` | `sebastian` | **Frontend**: `src/app/`, `src/components/`, scaffold, Tailwind, shadcn/ui y CI. |
+| Andrés | `4ndr3z18` | `andrez` | **Backend**: `supabase/`, `src/server/`, `src/lib/validation/` y `middleware.ts`. |
 
-Compartidas, se modifican por consenso y avisando en el PR: `src/components/ui/`, `AGENTS.md`, `MEMORY.md` y `docs/`.
+Compartidas, se modifican por consenso y avisando en el PR: `AGENTS.md`, `MEMORY.md`, `README.md` y `docs/`.
+
+La frontera es la carpeta: **todo lo que está en `src/server/` es backend**, todo lo demás es frontend. El frontend nunca importa `src/server/supabase/*`; consume Server Actions y tipos. Los esquemas Zod de `src/lib/validation/` son el contrato de validación: el backend los aplica y el frontend los usa en los formularios, sin duplicarlos.
 
 ### Orden de lectura
 
 1. **`AGENTS.md`** (este archivo): reglas técnicas, de estilo y de trabajo.
 2. **`docs/roadmap.md`**: qué se construye, en qué orden y quién hace cada parte.
-3. **`MEMORY.md`**: estado compartido del proyecto (máximo 50 palabras).
-4. **`docs/decisions.md`**: qué se decidió y por qué. **No reabras una decisión sin un argumento nuevo**; si lo tienes, propón un ADR que la sustituya.
-5. **`MEMORY.local.md`**: estado personal del humano que te invocó, si existe.
-6. **`README.md`**: cómo se levanta el proyecto y dónde está cada cosa.
+3. **`docs/contracts.md`**: tipos, constantes de la jornada y firma de las Server Actions.
+4. **`MEMORY.md`**: estado compartido del proyecto (máximo 50 palabras).
+5. **`docs/decisions.md`**: qué se decidió y por qué. **No reabras una decisión sin un argumento nuevo**; si lo tienes, propón un ADR que la sustituya.
+6. **`MEMORY.local.md`**: estado personal del humano que te invocó, si existe.
+7. **`README.md`**: cómo se levanta el proyecto y dónde está cada cosa.
 
 ### Antes de la primera línea de código
 
@@ -53,6 +56,7 @@ No hay memoria compartida entre sesiones ni entre las dos IAs: **lo que no quede
 | `MEMORY.local.md` | **No** (`.gitignore`) | Cada uno | Estado personal: rama, tarea en curso, pendientes. Se crea copiando `MEMORY.local.example.md`. |
 | `docs/decisions.md` | Sí | Ambos | Decisiones (ADR) con su justificación. |
 | `docs/roadmap.md` | Sí | Ambos | Fases, tareas, responsables y dependencias. |
+| `docs/contracts.md` | Sí | Andrés (backend) | Tipos, constantes de la jornada y firma de las Server Actions. |
 
 - **Límite duro:** `MEMORY.md` no puede superar las 50 palabras. Lo que no cabe va a `docs/decisions.md` (el porqué) o a `docs/roadmap.md` (el qué viene).
 - **Regla de verdad:** la versión de estos archivos en `main` es la única autoritativa. Nunca se leen desde una rama ajena.
@@ -74,7 +78,7 @@ No hay memoria compartida entre sesiones ni entre las dos IAs: **lo que no quede
   | **Validación** | **Zod** | Esquemas de validación unificados en cliente y servidor para asignaturas y credenciales. |
   | **Formularios** | **React Hook Form** + Resolvers | Gestión eficiente de formularios de login y edición de tarjetas de asignaturas. |
   | **Iconografía** | **lucide-react** | Iconos vectoriales minimalistas (sin fuentes externas ni emojis). |
-| **Drag & Drop** | **@dnd-kit** | Sensores con activación por pulsación prolongada: soporte táctil real y accesibilidad por teclado. |
+  | **Drag & Drop** | **@dnd-kit** | Sensores con activación por pulsación prolongada: soporte táctil real y accesibilidad por teclado. |
 
 ---
 
@@ -89,6 +93,12 @@ No hay memoria compartida entre sesiones ni entre las dos IAs: **lo que no quede
 ---
 
 ## 3. Arquitectura y Estándares de Código
+
+### Frontera frontend / backend
+- `src/server/**` solo lo consumen Server Components, Server Actions y `middleware.ts`. Un Client Component **nunca** importa de ahí.
+- Los Server Actions viven en `src/server/actions/` y devuelven siempre `{ ok: true, data }` o `{ ok: false, errors }`. La UI no hace `try/catch` sobre Supabase ni conoce sus errores.
+- Los tipos de dominio están en `src/lib/types/domain.ts` y deben coincidir con `docs/contracts.md`. Cambiarlos requiere aviso en el PR.
+- Los esquemas Zod de `src/lib/validation/` se usan en ambos lados. No se duplican reglas de validación en el formulario.
 
 ### Componentes y Estado
 - Separar claramente **Server Components** (para obtención inicial de datos y seguridad) y **Client Components** (`'use client'`) para interactividad avanzada (drag-and-drop de horarios, menús desplegables, estados de carga).
@@ -125,7 +135,7 @@ Un cambio está completo únicamente si:
 - Antes de empezar cualquier tarea: `git pull --rebase origin main`. Antes de cada push: rebase sobre `main`.
 
 ### Propiedad del código (evitar conflictos)
-Cada carpeta tiene **un solo dueño** en cada momento. La asignación está en la tabla de "Punto de entrada". Si hay que tocar la carpeta del otro, se avisa primero en el PR.
+Cada carpeta tiene **un solo dueño** en cada momento: la asignación está en la tabla de "Punto de entrada" y la frontera técnica en § 3. Si hay que tocar una carpeta del otro, se avisa primero en el PR.
 
 ### Commits
 - Formato Conventional Commits en español: `feat(horario): ...`, `fix(auth): ...`, `docs(memory): ...`, `chore(deps): ...`.
