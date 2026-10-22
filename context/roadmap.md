@@ -32,7 +32,7 @@ Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos
 - [x] `middleware.ts` con refresco de sesión y protección de `/horario`.
 - [x] Pruebas pgTAP de aislamiento entre dos alumnos (`supabase/tests/rls.test.sql`).
 
-**Terminado cuando:** dos usuarios de prueba no pueden leer ni modificar los datos del otro, verificado manualmente y documentado en el PR. **Verificado en remoto el 2026-10-22** con dos usuarios temporales: RLS, FK compuesta, exclusión de solapamientos, límites de jornada, código duplicado y cascadas pasaron; los usuarios de prueba se eliminaron. Además se ejecutó el flujo real **Auth (password grant) + PostgREST** con tokens: 19/20 comprobaciones con la expectativa exacta y la restante confirmó el mismo `23P01` con HTTP 400 (mapeo correcto de PostgREST).
+**Terminado cuando:** dos usuarios de prueba no pueden leer ni modificar los datos del otro, verificado manualmente y documentado en el PR. **Verificado en remoto el 2026-10-22** con dos usuarios temporales: RLS, FK compuesta, exclusión de solapamientos, límites de jornada, código duplicado y cascadas pasaron; los usuarios de prueba se eliminaron. Además se ejecutó el flujo real **Auth (password grant) + PostgREST** con tokens: **53/53 comprobaciones** (aislamiento, permisos, límites, sábado, duración máxima, movimientos, cascadas y acceso anónimo) y un smoke test del cliente **`@supabase/ssr`** con cookies, que pasó completo.
 
 ## Fase 3 — Grilla del horario (estática) · Sebastián
 
