@@ -99,3 +99,15 @@ Reglas de la frontera:
 4. `docs/contracts.md`, mantenido por el backend, es el puente: tipos, constantes de la jornada y firmas de las acciones.
 
 **Consecuencias:** Cada quien puede trabajar sin esperar al otro: el backend escribe migraciones y RLS sin el scaffold de Next.js, y el frontend construye la grilla con datos mock. A cambio, el contrato (`docs/contracts.md`) se vuelve crítico: si diverge, la Fase 5 se convierte en arqueología. ADR-004 queda bajo responsabilidad del backend.
+
+---
+
+## ADR-007 — Una tarjeta por módulo en la grilla
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada
+
+**Contexto:** `schedule_blocks.duration` permite que un ramo ocupe varios módulos consecutivos. La grilla de referencia muestra cada módulo como una casilla independiente y las tarjetas que abarcaban dos módulos se leían como una sola caja, difícil de arrastrar y de ubicar.
+
+**Decisión:** La UI expande cada bloque en una tarjeta por módulo antes de dibujar (`normalizeBlocks` en `src/lib/schedule/blocks.ts`). El backend conserva `duration`; el frontend la recibe y la representa como tarjetas consecutivas.
+
+**Consecuencias:** Mover una tarjeta mueve un solo módulo. Si un ramo dura dos o más, sus tarjetas se mueven por separado. La Fase 5 debe decidir si un movimiento de ese tipo divide el bloque original o si se vuelve a agrupar.
