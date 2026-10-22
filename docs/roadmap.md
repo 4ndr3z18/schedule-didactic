@@ -49,12 +49,14 @@ No depende de la base de datos: avanza con datos mock tipados según `docs/contr
 
 ## Fase 4 — Interacción: drag & drop y edición · Sebastián
 
-- [ ] `DndContext` con `PointerSensor` (`activationConstraint.delay` para pulsación prolongada) y `KeyboardSensor`.
+- [x] `DndContext` con `MouseSensor` + `TouchSensor` (pulsación prolongada de 180 ms) y `KeyboardSensor`.
 - [ ] Arrastrar tarjeta desde el panel a un bloque libre de la grilla.
-- [ ] Mover una tarjeta ya ubicada entre bloques.
+- [x] Mover una tarjeta ya ubicada entre bloques.
 - [ ] Edición de la tarjeta ubicada (nombre, código, nivel) con React Hook Form + los esquemas Zod de `src/lib/validation/`.
 - [ ] Papelera con activación por pulsación prolongada.
-- [ ] Feedback visual: bloque válido, bloque inválido, colisión.
+- [x] Feedback visual: bloque válido, bloque inválido, colisión y aviso al soltar sobre una casilla ocupada.
+
+Los movimientos viven en estado local hasta la Fase 5, que los persiste con las Server Actions.
 
 **Terminado cuando:** funciona con mouse, con teclado y en un teléfono real, sin selección de texto accidental ni scroll fantasma.
 
