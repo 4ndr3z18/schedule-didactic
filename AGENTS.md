@@ -125,7 +125,7 @@ Un cambio está completo únicamente si:
 - Antes de empezar cualquier tarea: `git pull --rebase origin main`. Antes de cada push: rebase sobre `main`.
 
 ### Propiedad del código (evitar conflictos)
-Cada carpeta tiene **un solo dueño** en cada momento. La asignación está en la tabla de "Punto de entrada para un agente nuevo". Si hay que tocar la carpeta del otro, se avisa primero en el PR.
+Cada carpeta tiene **un solo dueño** en cada momento. La asignación está en la tabla de "Punto de entrada". Si hay que tocar la carpeta del otro, se avisa primero en el PR.
 
 ### Commits
 - Formato Conventional Commits en español: `feat(horario): ...`, `fix(auth): ...`, `docs(memory): ...`, `chore(deps): ...`.
