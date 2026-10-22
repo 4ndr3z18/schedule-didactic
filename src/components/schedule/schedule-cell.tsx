@@ -44,7 +44,7 @@ export function ScheduleCell({
       data-cell={id}
       style={style}
       className={cn(
-        "relative border-r border-b p-[2px] transition-[background-color,box-shadow] duration-150 ease-out",
+        "relative border-r border-b p-[3px] transition-[background-color,box-shadow] duration-150 ease-out",
         isAltRow && "bg-muted/30",
         !isDragging && "hover:bg-accent/40",
         isFreeTarget && "bg-primary/[0.04]",
