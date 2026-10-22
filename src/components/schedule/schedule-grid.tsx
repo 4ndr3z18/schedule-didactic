@@ -25,10 +25,10 @@ export function ScheduleGrid({ subjects, blocks, cornerSlot }: ScheduleGridProps
       <div
         role="group"
         aria-label={`Horario semanal: ${dayLabel(1)} a ${dayLabel(6)}`}
-        className="grid min-w-[46.25rem]"
+        className="grid min-w-[49.25rem]"
         style={{
-          gridTemplateColumns: "4.25rem repeat(6, minmax(7rem, 1fr))",
-          gridTemplateRows: "2.375rem repeat(9, 2.75rem)",
+          gridTemplateColumns: "4.25rem repeat(6, minmax(7.5rem, 1fr))",
+          gridTemplateRows: "2.375rem repeat(9, 3rem)",
         }}
       >
         <div
