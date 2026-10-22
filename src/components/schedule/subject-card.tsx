@@ -15,7 +15,7 @@ export function SubjectCard({ subject, className }: SubjectCardProps) {
       title={`${subject.name} · ${subject.code}`}
       data-testid="subject-card"
       className={cn(
-        "flex h-full w-full flex-col overflow-hidden rounded-md border px-1.5 py-0.5 text-center",
+        "flex h-full w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-md border px-1.5 py-1 text-center",
         "transition-[box-shadow] duration-150 ease-out",
         "hover:shadow-md hover:shadow-black/10",
         className,
@@ -26,12 +26,12 @@ export function SubjectCard({ subject, className }: SubjectCardProps) {
         color: "#FFFFFF",
       }}
     >
-      <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden">
+      <div className="flex min-h-0 w-full shrink items-center justify-center overflow-hidden">
         <span className="line-clamp-2 text-[10px] leading-[1.15] font-semibold break-words">
           {subject.name}
         </span>
       </div>
-      <span className="mt-0.5 min-h-[9px] shrink-0 text-[9px] leading-none font-medium tracking-[0.02em]">
+      <span className="shrink-0 text-[9px] leading-none font-medium tracking-[0.02em]">
         {subject.code}
       </span>
     </div>

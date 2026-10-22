@@ -16,13 +16,16 @@ export function ScheduleSkeleton() {
         </div>
 
         <div className="min-w-0 flex-1 overflow-hidden rounded-lg border">
-          <div className="grid min-w-[62rem] grid-cols-[5rem_repeat(6,minmax(9rem,1fr))]">
-            <Skeleton className="h-11 rounded-none border-r border-b" />
+          <div className="grid min-w-[49.625rem] grid-cols-[4.25rem_repeat(6,minmax(7.5rem,1fr))]">
+            <Skeleton className="h-[2.375rem] rounded-none border-r border-b" />
             {Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-11 rounded-none border-r border-b" />
+              <Skeleton key={index} className="h-[2.375rem] rounded-none border-r border-b" />
             ))}
-            {Array.from({ length: 45 }).map((_, index) => (
-              <Skeleton key={index} className="h-14 rounded-none border-r border-b" />
+            {Array.from({ length: 54 }).map((_, index) => (
+              <Skeleton
+                key={index}
+                className="h-[var(--schedule-row-h)] rounded-none border-r border-b"
+              />
             ))}
           </div>
         </div>

@@ -68,7 +68,7 @@ export function ScheduleGrid({
           className="bg-border grid min-w-[49.625rem] gap-px"
           style={{
             gridTemplateColumns: "4.25rem repeat(6, minmax(7.5rem, 1fr))",
-            gridTemplateRows: "2.375rem repeat(9, 3rem)",
+            gridTemplateRows: "2.375rem repeat(9, minmax(var(--schedule-row-h), auto))",
           }}
         >
           <div

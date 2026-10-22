@@ -117,6 +117,18 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Alto de la fila del horario. En móvil se da más aire para que el texto de la
+   tarjeta nunca quede recortado si el navegador agranda la fuente. En escritorio
+   crece con el ancho para que la tarjeta no se vea aplanada en pantallas amplias. */
+:root {
+  --schedule-row-h: 3.5rem;
+}
+@media (min-width: 40rem) {
+  :root {
+    --schedule-row-h: clamp(3.5rem, 4.1vw, 4.5rem);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
