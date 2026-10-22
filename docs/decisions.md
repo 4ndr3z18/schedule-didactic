@@ -111,3 +111,15 @@ Reglas de la frontera:
 **Decisión:** La UI expande cada bloque en una tarjeta por módulo antes de dibujar (`normalizeBlocks` en `src/lib/schedule/blocks.ts`). El backend conserva `duration`; el frontend la recibe y la representa como tarjetas consecutivas.
 
 **Consecuencias:** Mover una tarjeta mueve un solo módulo. Si un ramo dura dos o más, sus tarjetas se mueven por separado. La Fase 5 debe decidir si un movimiento de ese tipo divide el bloque original o si se vuelve a agrupar.
+
+---
+
+## ADR-008 — Tema claro/oscuro y navegación móvil con imán
+
+**Fecha:** 2026-10-22 · **Estado:** Aceptada
+
+**Contexto:** La grilla no tenía forma de alternar el tema aunque los tokens `.dark` ya existían. En móvil, al desplazar horizontalmente, la columna de horas sticky tapaba el texto de la primera tarjeta visible y no había una referencia clara de que había más días hacia la derecha.
+
+**Decisión:** El tema se maneja con `next-themes` (`attribute="class"`, `defaultTheme="system"`, `enableSystem`) y un botón `Sun`/`Moon` en el header. En móvil, el contenedor del horario usa `scroll-snap-type: x mandatory` con `scroll-padding-left: 4.25rem` y cada columna de día es un punto de imán; el imán se desactiva mientras se arrastra. La columna de horas conserva su línea y una sombra sutil, y el borde derecho muestra un degradado solo cuando queda contenido por ver. La exportación PNG usa el fondo calculado del horario para respetar el tema activo.
+
+**Consecuencias:** El tema se persiste en `localStorage` y respeta la preferencia del sistema hasta que el usuario lo cambie. El desplazamiento móvil siempre deja un día alineado junto a la columna de horas, aunque la última columna parcial se atenúa con el degradado. Cualquier componente nuevo dentro del horario debe mantener fondos opacos para que las líneas de la grilla (dibujadas con `gap-px`) no se transparenten.
