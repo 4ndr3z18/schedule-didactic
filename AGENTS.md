@@ -4,6 +4,45 @@ Este documento define las reglas técnicas, arquitectónicas y de calidad obliga
 
 ---
 
+## Punto de entrada para un agente nuevo
+
+Si eres un agente de IA y es la primera vez que abres este repositorio: **no tienes contexto previo de la conversación donde se tomaron estas decisiones**. Todo lo necesario está escrito en el repo. No preguntes al usuario algo que ya está resuelto aquí.
+
+### Quiénes trabajan en este proyecto
+
+| Persona | GitHub | Rama personal | Es dueña de |
+|---|---|---|---|
+| Sebastián | `s3b4s19` | `sebastian` | `supabase/`, `src/lib/supabase/`, `src/app/(auth)/` |
+| Andrés | `4ndr3z18` | `andrez` | `src/components/schedule/`, `src/app/(app)/horario/` |
+
+Las carpetas compartidas (`src/components/ui/`, `AGENTS.md`) se modifican por consenso, avisando en el Pull Request.
+
+### Lectura obligatoria, en este orden
+
+1. `AGENTS.md` (este archivo): stack, estilo, arquitectura y Definition of Done.
+2. `MEMORY.md`: estado compartido. Máximo 50 palabras, es un resumen, no un historial.
+3. `docs/decisions.md`: qué se decidió y por qué. **No reabras una decisión sin un argumento nuevo**; si lo tienes, propón un ADR que la sustituya.
+4. `MEMORY.local.md` si existe: estado personal del humano que te está invocando.
+5. `README.md`: cómo se levanta el proyecto y dónde está cada cosa.
+
+### Cómo trabajar sin pisar al compañero
+
+- `git pull --rebase origin main` antes de empezar y antes de cada push.
+- Trabaja solo en la rama personal del humano que te invocó. Nunca commitees en `main`.
+- No modifiques las carpetas del otro sin avisarlo en el Pull Request.
+- Si lo que pide el humano contradice este documento, gana `AGENTS.md`: adviérselo antes de escribir código.
+
+### Cómo comunicarte con la otra IA
+
+Entre sesiones no hay memoria compartida: **lo que no quede escrito en el repo o en un PR no existe para la otra IA**. Al cerrar cada tarea:
+
+1. Actualiza `MEMORY.local.md` con tu estado.
+2. Actualiza `MEMORY.md` solo si el compañero necesita saberlo (≤50 palabras).
+3. Si tomaste una decisión nueva, regístrala en `docs/decisions.md` con contexto, decisión y consecuencias.
+4. Deja un comentario corto en el PR: qué tocaste, qué quedó pendiente y qué debe hacer la otra persona.
+
+---
+
 ## 0. Gestión de Memoria y Contexto Compartido
 
 El proyecto lo desarrollan **dos personas en paralelo, cada una con su propio agente de IA**. El contexto se reparte en tres archivos con responsabilidades distintas. No mezclar sus propósitos.
@@ -87,13 +126,7 @@ Un cambio está completo únicamente si:
 - Antes de empezar cualquier tarea: `git pull --rebase origin main`. Antes de cada push: rebase sobre `main`.
 
 ### Propiedad del código (evitar conflictos)
-Cada carpeta tiene **un solo dueño** en cada momento. Si hay que tocar la carpeta del otro, se avisa primero.
-
-| Ruta | Dueño sugerido |
-|---|---|
-| `supabase/`, `src/lib/supabase/`, `src/app/(auth)/` | Sebastián |
-| `src/components/schedule/`, `src/app/(app)/horario/` | Andrés |
-| `src/components/ui/` (shadcn), `AGENTS.md` | Ambos, por consenso |
+Cada carpeta tiene **un solo dueño** en cada momento. La asignación está en la tabla de "Punto de entrada para un agente nuevo". Si hay que tocar la carpeta del otro, se avisa primero en el PR.
 
 ### Commits
 - Formato Conventional Commits en español: `feat(horario): ...`, `fix(auth): ...`, `docs(memory): ...`, `chore(deps): ...`.

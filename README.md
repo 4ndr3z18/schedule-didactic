@@ -37,13 +37,15 @@ docs/decisions.md    Registro de decisiones (ADR) con su justificación.
 
 ## Trabajo en equipo
 
-Dos desarrolladores, cada uno con su propio agente. Reglas completas en [`AGENTS.md` § 0](./AGENTS.md) y [`AGENTS.md` § 5](./AGENTS.md).
+Dos desarrolladores, cada uno con su propio agente. Reglas completas en [`AGENTS.md`](./AGENTS.md): sección "Punto de entrada para un agente nuevo" y sección 5.
 
 1. `git pull --rebase origin main` antes de empezar.
 2. Trabajar en la rama personal (`sebastian`, `andrez`). Nunca commitear directo a `main`.
 3. Integrar por Pull Request con revisión del compañero.
 4. Al cerrar la tarea actualizar `MEMORY.local.md`, `MEMORY.md` (si afecta al compañero) y `docs/decisions.md`.
 5. Copiar `MEMORY.local.md` como plantilla propia si no existe; está en `.gitignore`.
+
+Los agentes que no leen `AGENTS.md` por convención tienen puntos de entrada alternativos: [`CLAUDE.md`](./CLAUDE.md) y [`.github/copilot-instructions.md`](./.github/copilot-instructions.md). Todos apuntan a `AGENTS.md`, que es la única fuente de verdad.
 
 ## Puesta en marcha (cuando exista el scaffold)
 
