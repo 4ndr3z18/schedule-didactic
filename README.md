@@ -8,7 +8,7 @@ Repository name: `schedule-didactic`.
 
 ## Estado
 
-Fase 0. El repositorio contiene únicamente la definición del proyecto y las convenciones de trabajo. La aplicación Next.js aún no está inicializada.
+Fase 0 completada: convenciones y plan definidos. Siguiente: Fase 1 (scaffold de Next.js), ver [`docs/roadmap.md`](./docs/roadmap.md).
 
 ## Stack
 
@@ -29,23 +29,25 @@ El detalle de reglas, estilo y criterios de aceptación está en [`AGENTS.md`](.
 ## Estructura del repositorio
 
 ```
-AGENTS.md            Contrato técnico del proyecto (obligatorio para agentes).
-MEMORY.md            Estado compartido y acotado (máximo 50 palabras).
-MEMORY.local.md      Estado personal de cada desarrollador. Ignorado por git.
-docs/decisions.md    Registro de decisiones (ADR) con su justificación.
+AGENTS.md                 Punto de partida. Contrato técnico y de trabajo.
+docs/roadmap.md           Fases, tareas, responsables y dependencias.
+docs/decisions.md         Decisiones (ADR) con su justificación.
+MEMORY.md                 Estado compartido y acotado (máximo 50 palabras).
+MEMORY.local.example.md   Plantilla de memoria personal. Copiar a MEMORY.local.md.
+MEMORY.local.md           Tu memoria personal. Ignorada por git.
 ```
 
 ## Trabajo en equipo
 
-Dos desarrolladores, cada uno con su propio agente. Reglas completas en [`AGENTS.md`](./AGENTS.md): sección "Punto de entrada para un agente nuevo" y sección 5.
+Dos desarrolladores, cada uno con su propia sesión de OpenCode. Reglas completas en [`AGENTS.md`](./AGENTS.md), secciones "Punto de entrada" y "Trabajo en Equipo y Control de Versiones".
 
 1. `git pull --rebase origin main` antes de empezar.
 2. Trabajar en la rama personal (`sebastian`, `andrez`). Nunca commitear directo a `main`.
 3. Integrar por Pull Request con revisión del compañero.
-4. Al cerrar la tarea actualizar `MEMORY.local.md`, `MEMORY.md` (si afecta al compañero) y `docs/decisions.md`.
-5. Copiar `MEMORY.local.md` como plantilla propia si no existe; está en `.gitignore`.
+4. Al cerrar la tarea: actualizar `MEMORY.local.md`, `MEMORY.md` (si afecta al compañero) y `docs/decisions.md`.
+5. Si no tienes `MEMORY.local.md`, copia `MEMORY.local.example.md`; el archivo resultante queda fuera de git.
 
-Los agentes que no leen `AGENTS.md` por convención tienen puntos de entrada alternativos: [`CLAUDE.md`](./CLAUDE.md) y [`.github/copilot-instructions.md`](./.github/copilot-instructions.md). Todos apuntan a `AGENTS.md`, que es la única fuente de verdad.
+Qué construir y en qué orden: [`docs/roadmap.md`](./docs/roadmap.md).
 
 ## Puesta en marcha (cuando exista el scaffold)
 

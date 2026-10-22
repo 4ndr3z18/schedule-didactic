@@ -1,10 +1,10 @@
 # MEMORY.md — UsachSchedule
 
 ## Estado
-- Fase 0: repo sin código; scaffold Next.js pendiente.
-- Stack y convenciones cerrados en `AGENTS.md`; decisiones en `docs/decisions.md`.
-- Ramas: `main` autoridad; trabajo en `sebastian`.
+- Fase 0 lista; sigue Fase 1 (scaffold).
+- Reglas: `AGENTS.md`. Plan: `docs/roadmap.md`. Decisiones: `docs/decisions.md`.
+- `main` es autoridad; se trabaja en `sebastian` o `andrez`.
 
 ## Pendiente
-- Scaffold + Supabase (schema/RLS) + UI horario USACH.
+- Confirmar ADR-004 (módulos USACH) antes de la migración.
 - Nunca commitear `MEMORY.local.md` ni `.env.local`.

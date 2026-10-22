@@ -1,63 +1,62 @@
-# AGENTS.md - Directrices de Desarrollo (UsachSchedule)
+# AGENTS.md — Directrices de Desarrollo (UsachSchedule)
 
-Este documento define las reglas técnicas, arquitectónicas y de calidad obligatorias para el desarrollo y mantenimiento del proyecto **UsachSchedule**.
+Contrato técnico y de trabajo del proyecto **UsachSchedule**. OpenCode carga este archivo automáticamente al iniciar una sesión en este repositorio: es el punto de partida de cualquier agente que trabaje aquí.
 
 ---
 
-## Punto de entrada para un agente nuevo
+## Punto de entrada
 
-Si eres un agente de IA y es la primera vez que abres este repositorio: **no tienes contexto previo de la conversación donde se tomaron estas decisiones**. Todo lo necesario está escrito en el repo. No preguntes al usuario algo que ya está resuelto aquí.
+Si es tu primera sesión en este repositorio, **no tienes el contexto de las conversaciones anteriores**. Todo lo necesario está escrito acá y en los documentos enlazados. No preguntes al usuario algo que ya está resuelto: búscalo primero.
 
-### Quiénes trabajan en este proyecto
+### Quiénes trabajan acá
 
-| Persona | GitHub | Rama personal | Es dueña de |
+| Persona | GitHub | Rama | Es dueña de |
 |---|---|---|---|
 | Sebastián | `s3b4s19` | `sebastian` | `supabase/`, `src/lib/supabase/`, `src/app/(auth)/` |
 | Andrés | `4ndr3z18` | `andrez` | `src/components/schedule/`, `src/app/(app)/horario/` |
 
-Las carpetas compartidas (`src/components/ui/`, `AGENTS.md`) se modifican por consenso, avisando en el Pull Request.
+Compartidas, se modifican por consenso y avisando en el PR: `src/components/ui/`, `AGENTS.md`, `MEMORY.md` y `docs/`.
 
-### Lectura obligatoria, en este orden
+### Orden de lectura
 
-1. `AGENTS.md` (este archivo): stack, estilo, arquitectura y Definition of Done.
-2. `MEMORY.md`: estado compartido. Máximo 50 palabras, es un resumen, no un historial.
-3. `docs/decisions.md`: qué se decidió y por qué. **No reabras una decisión sin un argumento nuevo**; si lo tienes, propón un ADR que la sustituya.
-4. `MEMORY.local.md` si existe: estado personal del humano que te está invocando.
-5. `README.md`: cómo se levanta el proyecto y dónde está cada cosa.
+1. **`AGENTS.md`** (este archivo): reglas técnicas, de estilo y de trabajo.
+2. **`docs/roadmap.md`**: qué se construye, en qué orden y quién hace cada parte.
+3. **`MEMORY.md`**: estado compartido del proyecto (máximo 50 palabras).
+4. **`docs/decisions.md`**: qué se decidió y por qué. **No reabras una decisión sin un argumento nuevo**; si lo tienes, propón un ADR que la sustituya.
+5. **`MEMORY.local.md`**: estado personal del humano que te invocó, si existe.
+6. **`README.md`**: cómo se levanta el proyecto y dónde está cada cosa.
 
-### Cómo trabajar sin pisar al compañero
+### Antes de la primera línea de código
 
-- `git pull --rebase origin main` antes de empezar y antes de cada push.
-- Trabaja solo en la rama personal del humano que te invocó. Nunca commitees en `main`.
-- No modifiques las carpetas del otro sin avisarlo en el Pull Request.
-- Si lo que pide el humano contradice este documento, gana `AGENTS.md`: adviérselo antes de escribir código.
+- `git pull --rebase origin main`.
+- Confirma la rama: debe ser la del humano que te invocó, nunca `main`.
+- Si la tarea toca una carpeta del otro, avísalo en el issue o PR antes de empezar.
+- Si la tarea depende de un ADR en estado `Propuesta`, no inventes el modelo de datos: pregunta o espera.
 
-### Cómo comunicarte con la otra IA
+### Comunicación entre agentes
 
-Entre sesiones no hay memoria compartida: **lo que no quede escrito en el repo o en un PR no existe para la otra IA**. Al cerrar cada tarea:
+No hay memoria compartida entre sesiones ni entre las dos IAs: **lo que no quede escrito en el repo o en un PR no existe para la otra IA**. Al cerrar una tarea:
 
-1. Actualiza `MEMORY.local.md` con tu estado.
-2. Actualiza `MEMORY.md` solo si el compañero necesita saberlo (≤50 palabras).
-3. Si tomaste una decisión nueva, regístrala en `docs/decisions.md` con contexto, decisión y consecuencias.
-4. Deja un comentario corto en el PR: qué tocaste, qué quedó pendiente y qué debe hacer la otra persona.
+1. `MEMORY.local.md`: tu estado personal. No se commitea.
+2. `MEMORY.md`: solo lo que el compañero necesita saber, respetando las 50 palabras.
+3. `docs/decisions.md`: toda decisión nueva, con contexto, decisión y consecuencias.
+4. Comentario en el PR: qué tocaste, qué quedó pendiente y qué debe hacer la otra persona.
 
 ---
 
-## 0. Gestión de Memoria y Contexto Compartido
-
-El proyecto lo desarrollan **dos personas en paralelo, cada una con su propio agente de IA**. El contexto se reparte en tres archivos con responsabilidades distintas. No mezclar sus propósitos.
+## 0. Memoria y Contexto Compartido
 
 | Archivo | Versionado | Quién escribe | Contenido |
 |---|---|---|---|
-| `AGENTS.md` | Sí | Ambos, por consenso | Contrato técnico: stack, estilo, arquitectura, DoD. |
-| `MEMORY.md` | Sí | Ambos, al cerrar tarea | Estado y decisiones **compartidas** ya cerradas. |
-| `MEMORY.local.md` | **No** (`.gitignore`) | Cada uno | Estado personal: rama activa, tarea en curso, pendientes propios. |
-| `docs/decisions.md` | Sí | Ambos | Log de decisiones (ADR) con su justificación. |
+| `AGENTS.md` | Sí | Ambos, por consenso | Contrato técnico y de trabajo. |
+| `MEMORY.md` | Sí | Ambos, al cerrar tarea | Estado compartido. **Máximo 50 palabras.** |
+| `MEMORY.local.md` | **No** (`.gitignore`) | Cada uno | Estado personal: rama, tarea en curso, pendientes. Se crea copiando `MEMORY.local.example.md`. |
+| `docs/decisions.md` | Sí | Ambos | Decisiones (ADR) con su justificación. |
+| `docs/roadmap.md` | Sí | Ambos | Fases, tareas, responsables y dependencias. |
 
-- **Lectura Obligatoria:** Al iniciar cualquier sesión, el agente debe leer `AGENTS.md`, `MEMORY.md` y, si existe, `MEMORY.local.md`; además consultar `docs/decisions.md` antes de proponer cambios de stack o de modelo de datos.
-- **Actualización Dinámica:** Al finalizar una tarea, actualizar `MEMORY.local.md` siempre y `MEMORY.md` solo si la decisión afecta al compañero.
-- **Límite y Concisión:** `MEMORY.md` tiene un límite estricto de **máximo 50 palabras** en total. Lo que no cabe ahí va a `docs/decisions.md`.
-- **Regla de verdad:** la versión de `AGENTS.md` y `MEMORY.md` en `main` es la única autoritativa. Nunca leerlos desde una rama ajena.
+- **Límite duro:** `MEMORY.md` no puede superar las 50 palabras. Lo que no cabe va a `docs/decisions.md` (el porqué) o a `docs/roadmap.md` (el qué viene).
+- **Regla de verdad:** la versión de estos archivos en `main` es la única autoritativa. Nunca se leen desde una rama ajena.
+- **Actualización:** al cerrar cada tarea, según el protocolo de "Comunicación entre agentes".
 
 ---
 
@@ -134,10 +133,7 @@ Cada carpeta tiene **un solo dueño** en cada momento. La asignación está en l
 - Prohibido commitear `.env.local`, `MEMORY.local.md`, `node_modules`, claves `sb_secret_` o cualquier credencial. Las claves del cliente van en variables `NEXT_PUBLIC_*`; la `service_role` **nunca** toca el navegador.
 
 ### Memoria compartida al cerrar tarea
-1. Actualizar `MEMORY.local.md` (estado personal).
-2. Actualizar `MEMORY.md` **solo** con lo que el compañero necesita saber, respetando las 50 palabras.
-3. Registrar la decisión y su motivo en `docs/decisions.md`.
-4. Commit `docs(memory): ...` en la rama personal y push.
+El protocolo completo está en "Comunicación entre agentes". En git, el cierre siempre deja un commit `docs(memory): ...` en la rama personal, y el PR actualizado con lo pendiente.
 
 ### Regla anti-deriva entre IAs
 Si dos agentes proponen cosas distintas (librería, nombre de tabla, formato de fecha), **gana lo escrito en `main`**. Si no está escrito, se escribe la decisión en `docs/decisions.md` antes de implementarla.
