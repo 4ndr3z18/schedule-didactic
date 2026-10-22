@@ -1,0 +1,9 @@
+-- Seed de desarrollo.
+--
+-- Intencionalmente vacío: los usuarios se crean por Supabase Auth y el trigger
+-- `handle_new_user` genera su perfil. Sembrar filas en `auth.users` a mano
+-- produce hashes de contraseña inválidos y salta el flujo real de registro.
+--
+-- Para probar con datos usa el registro de la aplicación o
+-- `supabase/tests/rls.test.sql`, que crea dos usuarios temporales y verifica
+-- que no se vean entre sí.

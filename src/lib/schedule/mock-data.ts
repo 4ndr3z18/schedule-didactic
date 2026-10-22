@@ -10,7 +10,10 @@ import { colorKeyForIndex } from "@/lib/schedule/palette";
 const DEMO_USER = "demo-user";
 const CREATED_AT = "2026-10-22T00:00:00.000Z";
 
-const SUBJECTS: Omit<Subject, "userId" | "createdAt" | "color">[] = [
+const SUBJECTS: Omit<
+  Subject,
+  "userId" | "createdAt" | "updatedAt" | "color"
+>[] = [
   { id: "ert2011", name: "Electrónica Analógica", code: "ERT2011", level: 3 },
   { id: "eao566", name: "Cálculo Avanzado", code: "EAO566", level: 5 },
   { id: "dti008", name: "Taller de Programación", code: "DTI008", level: 2 },
@@ -19,7 +22,7 @@ const SUBJECTS: Omit<Subject, "userId" | "createdAt" | "color">[] = [
   { id: "eao544", name: "Álgebra Lineal", code: "EAO544", level: 1 },
 ];
 
-const BLOCKS: Omit<ScheduleBlock, "userId">[] = [
+const BLOCKS: Omit<ScheduleBlock, "userId" | "createdAt" | "updatedAt">[] = [
   { id: "b1", subjectId: "ert2011", dayOfWeek: 1, moduleIndex: 1, duration: 1 },
   { id: "b2", subjectId: "ert2011", dayOfWeek: 1, moduleIndex: 2, duration: 1 },
   { id: "b3", subjectId: "eao566", dayOfWeek: 1, moduleIndex: 3, duration: 1 },
@@ -40,11 +43,14 @@ export function getMockSchedule(): Schedule {
     userId: DEMO_USER,
     color: colorKeyForIndex(index),
     createdAt: CREATED_AT,
+    updatedAt: CREATED_AT,
   }));
 
   const blocks: ScheduleBlock[] = BLOCKS.map((block) => ({
     ...block,
     userId: DEMO_USER,
+    createdAt: CREATED_AT,
+    updatedAt: CREATED_AT,
   }));
 
   return { subjects, blocks };

@@ -44,6 +44,7 @@ next-env.d.ts
 /supabase/.temp
 
 # memoria y config personal del agente (NO compartir)
+# MEMORY.local.md vive en context/ y nunca se versiona.
 MEMORY.local.md
 .opencode/
 .agents/
