@@ -46,19 +46,26 @@ Estados: `Aceptada` · `Propuesta` · `Sustituida por ADR-XXX`
 
 ---
 
-## ADR-004 — Modelo de datos del horario
+## ADR-004 — Modelo de datos y estructura de la jornada
 
-**Fecha:** 2026-10-22 · **Estado:** Propuesta (la define el backend; ver ADR-006)
+**Fecha:** 2026-10-22 · **Estado:** Aceptada (confirmada por Sebastián; ver ADR-006)
 
-**Propuesta inicial:**
+**Jornada confirmada:**
+
+- **9 módulos de 80 minutos**, lunes a sábado.
+- Horarios: 08:15–09:35, 09:50–11:10, 11:25–12:45, 13:45–15:05, 15:20–16:40, 16:55–18:15, 18:45–20:05, 20:05–21:25, 21:25–22:45.
+- Recreos: 15, 15, 60 (almuerzo), 15, 15, 30, 0 y 0 minutos. Los módulos 7, 8 y 9 van pegados.
+- Un ramo puede ocupar **módulos consecutivos**: se guarda como un bloque con `duration` mayor a 1 y se dibuja como una sola tarjeta.
+
+**Tablas:**
 
 | Tabla | Campos | Notas |
 |---|---|---|
 | `profiles` | `id` (= `auth.users.id`), `full_name`, `career`, `created_at` | Creada por trigger al registrarse. |
 | `subjects` | `id`, `user_id`, `name`, `code`, `level`, `color`, `created_at` | Asignaturas personalizadas por alumno. `unique (user_id, code)`. |
-| `schedule_blocks` | `id`, `user_id`, `subject_id`, `day_of_week` (1–7), `module_index` (1–N), `duration` | Bloques del calendario semanal. `unique (user_id, day_of_week, module_index)`. |
+| `schedule_blocks` | `id`, `user_id`, `subject_id`, `day_of_week` (1–6), `module_index` (1–9), `duration` (1–9) | Bloques del calendario semanal. `unique (user_id, day_of_week, module_index)`. |
 
-**Pendiente de definir:** cuántos módulos tiene la jornada y su duración (USACH usa bloques de 90 minutos), y si un ramo puede ocupar módulos consecutivos como una sola fila visual.
+**Restricción de colisión:** el servidor debe rechazar un bloque que se solape con otro del mismo usuario y día, incluyendo los módulos que abarca `duration`. Una restricción `unique` sola no alcanza; se implementa con una función o un `EXCLUDE` sobre rangos.
 
 **Regla:** RLS activo en las tres tablas, con política `auth.uid() = user_id` en `SELECT`, `INSERT`, `UPDATE` y `DELETE`. Sin excepciones.
 

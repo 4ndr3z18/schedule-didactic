@@ -10,12 +10,12 @@ Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos
 
 ## Fase 1 — Base técnica · Sebastián
 
-- [ ] `create-next-app` con App Router, TypeScript `strict`, Tailwind, `src/`, alias `@/*`.
-- [ ] `shadcn/ui` inicializado con tema neutro y `lucide-react`.
-- [ ] Dependencias: `zod`, `react-hook-form`, `@hookform/resolvers`, `@dnd-kit/core`, `@dnd-kit/sortable`, `@supabase/supabase-js`, `@supabase/ssr`.
-- [ ] ESLint + Prettier + script `typecheck` (`tsc --noEmit`).
-- [ ] CI en GitHub Actions: `lint`, `typecheck` y `build` en cada PR.
-- [ ] `README.md` con la puesta en marcha real.
+- [x] `create-next-app` con App Router, TypeScript `strict`, Tailwind, `src/`, alias `@/*`.
+- [x] `shadcn/ui` inicializado con tema neutro y `lucide-react`.
+- [x] Dependencias: `zod`, `react-hook-form`, `@hookform/resolvers`, `@dnd-kit/*`, `@supabase/supabase-js`, `@supabase/ssr`, `html-to-image`.
+- [x] ESLint + Prettier + script `typecheck` (`tsc --noEmit`).
+- [x] CI en GitHub Actions: `lint`, `typecheck` y `build` en cada PR.
+- [x] `README.md` con la puesta en marcha real.
 
 **Terminado cuando:** `npm run lint`, `npm run typecheck` y `npm run build` pasan en limpio, y el CI está verde en un PR de prueba.
 
@@ -37,12 +37,13 @@ Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos
 
 No depende de la base de datos: avanza con datos mock tipados según `docs/contracts.md`.
 
-- [ ] Layout de la app: header, sidebar colapsable en móvil (Sheet de shadcn), área de contenido.
-- [ ] Grilla semanal formato USACH: días en columnas, módulos en filas, encabezado de horas.
-- [ ] Tarjeta de asignatura: nombre, código, nivel, color.
-- [ ] Panel lateral con la lista de asignaturas del alumno.
-- [ ] Skeletons y estado vacío.
-- [ ] Datos mock en un solo archivo, fáciles de reemplazar por las Server Actions.
+- [x] Layout de la app: header, sidebar colapsable en móvil (panel lateral), área de contenido.
+- [x] Grilla semanal formato USACH: días en columnas, módulos en filas, encabezado de horas.
+- [x] Tarjeta de asignatura: nombre, código, nivel y color.
+- [x] Panel lateral con la lista de asignaturas del alumno.
+- [x] Skeletons y estado vacío.
+- [x] Datos mock en un solo archivo, fáciles de reemplazar por las Server Actions.
+- [x] Descarga de la semana como PNG (`html-to-image`).
 
 **Terminado cuando:** la grilla se ve correcta en 360 px, 768 px y 1440 px, sin scroll horizontal roto.
 

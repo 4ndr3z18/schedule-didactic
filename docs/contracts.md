@@ -8,15 +8,26 @@ Estado: **plantilla**. Se completa al inicio de la Fase 2.
 
 ## 1. Constantes de la jornada
 
-Definir antes de la primera migración. El frontend usa las mismas para dibujar la grilla.
+Confirmadas en ADR-004. El frontend las tiene en `src/lib/schedule/constants.ts`; deben coincidir.
 
-| Constante | Valor | Nota |
+| Constante | Valor |
+|---|---|
+| `TOTAL_MODULES` | 9 |
+| `MODULE_MINUTES` | 80 |
+| `INCLUDE_SATURDAY` | sí |
+| `DAYS` | lunes a sábado |
+
+| Módulo | Inicio | Fin |
 |---|---|---|
-| `TOTAL_MODULES` | _por definir_ | Cantidad de módulos por día. |
-| `MODULE_MINUTES` | _por definir_ | Duración de cada módulo. USACH usa bloques de 90 minutos. |
-| `FIRST_MODULE_START` | _por definir_ | Hora de inicio del primer módulo, formato `HH:mm`. |
-| `INCLUDE_SATURDAY` | _por definir_ | Si el sábado se muestra como columna. |
-| `DAYS` | _por definir_ | Orden y etiquetas de los días. |
+| 1 | 08:15 | 09:35 |
+| 2 | 09:50 | 11:10 |
+| 3 | 11:25 | 12:45 |
+| 4 | 13:45 | 15:05 |
+| 5 | 15:20 | 16:40 |
+| 6 | 16:55 | 18:15 |
+| 7 | 18:45 | 20:05 |
+| 8 | 20:05 | 21:25 |
+| 9 | 21:25 | 22:45 |
 
 ## 2. Tipos de dominio
 
@@ -77,6 +88,6 @@ type ActionResult<T> =
 
 ## 5. Pendiente de definir
 
-- Número y duración de módulos (ADR-004).
-- Si un ramo de varios módulos consecutivos se guarda como un bloque con `duration` o como varios bloques independientes.
+- Si un ramo de varios módulos consecutivos se guarda como un bloque con `duration` o como varios bloques independientes. El frontend asume `duration`.
 - Paleta de colores permitida para las asignaturas.
+- Formato de exportación: PNG de la semana generado en el cliente.
