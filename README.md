@@ -8,7 +8,7 @@ Repository name: `schedule-didactic`.
 
 ## Estado
 
-Fase 0 completada: convenciones, reparto de trabajo y contratos definidos. Fase 2 (backend Supabase) escrita en la rama `andrez`; falta probarla contra un proyecto real. Siguiente en `main`: Fase 1 (scaffold de Next.js), ver [`context/roadmap.md`](./context/roadmap.md).
+Fase 1 completada, Fase 3 completada y Fase 4 en curso: la app corre con Next.js, la grilla semanal estática funciona con datos de ejemplo, ya se puede mover tarjetas y descargar la semana como PNG. La Fase 2 (backend Supabase) está implementada y **verificada contra el proyecto remoto**. Falta la Fase 5: páginas de auth, middleware raíz e integración de la grilla con las Server Actions. Detalle en [`context/roadmap.md`](./context/roadmap.md).
 
 ## Stack
 
@@ -17,7 +17,7 @@ Fase 0 completada: convenciones, reparto de trabajo y contratos definidos. Fase 
 | Framework | Next.js (App Router) |
 | Lenguaje | TypeScript (`strict: true`) |
 | Estilos | Tailwind CSS |
-| Componentes | shadcn/ui (Radix Primitives) |
+| Componentes | shadcn/ui (Base UI) |
 | Datos y Auth | Supabase (Postgres + Auth + RLS) |
 | Validación | Zod |
 | Formularios | React Hook Form + resolvers |
@@ -53,7 +53,7 @@ supabase/                 Migraciones, seed, configuración local y pruebas RLS.
 | Quién | Capa | Rutas |
 |---|---|---|
 | Sebastián | Frontend | `src/app/`, `src/components/`, scaffold, Tailwind, shadcn/ui, CI. |
-| Andrés | Backend | `supabase/`, `src/server/`, `src/lib/validation/`, `middleware.ts`. |
+| Andrés | Backend | `supabase/`, `src/server/`, `src/lib/validation/`, `src/server/supabase/middleware.ts`. |
 
 La frontera completa está en [`context/AGENTS.md` § 3](./context/AGENTS.md). El frontend consume Server Actions y tipos; nunca importa `src/server/supabase/*`. El puente entre ambos es [`context/contracts.md`](./context/contracts.md).
 
@@ -69,15 +69,44 @@ Dos desarrolladores, cada uno con su propia sesión de OpenCode. Reglas completa
 
 Qué construir y en qué orden: [`context/roadmap.md`](./context/roadmap.md).
 
-## Puesta en marcha (cuando exista el scaffold)
+## Puesta en marcha
 
 ```bash
 npm install
-cp .env.example .env.local   # completar con las credenciales de Supabase
-npm run dev
+cp .env.example .env.local   # completar con las credenciales del proyecto Supabase
+npm run dev                  # http://localhost:3000
 ```
 
+Scripts disponibles:
+
+| Script | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo. |
+| `npm run build` | Build de producción. |
+| `npm run lint` | ESLint. |
+| `npm run typecheck` | `tsc --noEmit`. |
+| `npm run format` | Prettier sobre todo el repo. |
+| `npm run format:check` | Verifica formato sin escribir. |
+
 En Windows con PowerShell, si `npm` está bloqueado por la política de ejecución de scripts, usar `npm.cmd` o `cmd /c npm ...`.
+
+### Estructura del código
+
+```
+src/app/(app)/layout.tsx          Shell: header y contenedor
+src/app/(app)/horario/            Página del horario, loading y error
+src/components/schedule/          Grilla, tarjetas, panel y estados
+src/components/ui/                Componentes de shadcn/ui
+src/lib/schedule/                 Constantes de la jornada, paleta y datos de ejemplo
+src/lib/constants/                Wrapper de la jornada y límites del backend
+src/lib/types/domain.ts           Tipos compartidos con el backend
+src/lib/validation/               Esquemas Zod compartidos con los formularios
+src/lib/supabase/                 Tipos de la base y cliente de navegador
+src/server/supabase/              Cliente SSR y refresco de sesión
+src/server/actions/               login, register, logout, CRUD y getSchedule
+```
+
+La grilla usa `src/lib/schedule/constants.ts` como única fuente de los módulos: **9 bloques de 80 minutos**, lunes a sábado, con los horarios y recreos de ADR-004. El backend los consume desde `src/lib/constants/schedule.ts`; no los duplica.
 
 ### Variables de entorno
 
@@ -92,15 +121,15 @@ El proyecto remoto tiene la confirmación de correo activada: al registrarse, Su
 
 ## Backend (Supabase)
 
-El esquema vive en `supabase/migrations/20261022061151_initial_schema.sql`. Proyecto remoto: **`schedule-didactic`** (`ceibrnyeznqqsnkslmpw`, `us-east-1`), con las dos migraciones aplicadas y el aislamiento RLS verificado con dos usuarios reales.
+Proyecto remoto: **`schedule-didactic`** (`ceibrnyeznqqsnkslmpw`, `us-east-1`). Tiene aplicadas la migración inicial, la de índice de la FK compuesta y la de alineación con ADR-004 (9×80 y paleta). Verificación realizada: **40/40** comprobaciones E2E de Auth + PostgREST, **7/7** del cliente SSR con cookies y **33/33** de Zod; RLS y advisors sin hallazgos.
 
 | Tabla | Contenido |
 |---|---|
 | `profiles` | Datos del alumno. La fila la crea un trigger al registrarse en Auth. |
-| `subjects` | Asignaturas del alumno: nombre, código único, nivel 1–6 y color. |
-| `schedule_blocks` | Bloques del horario: día 1–6, módulo 1–10 y duración. |
+| `subjects` | Asignaturas del alumno: nombre, código único, nivel 1–6 y color de la paleta. |
+| `schedule_blocks` | Bloques del horario: día 1–6, módulo 1–9 y duración 1–9. |
 
-Reglas que impone la base, no solo la aplicación: RLS por `auth.uid()`, código único por alumno, bloques dentro de la jornada y prohibición de solapamientos (incluso con bloques de varios módulos).
+Reglas que impone la base, no solo la aplicación: RLS por `auth.uid()`, código único por alumno, bloques dentro de la jornada, colores de la paleta cerrada y prohibición de solapamientos (incluso con bloques de varios módulos).
 
 ### Aplicar las migraciones
 
@@ -131,18 +160,6 @@ npx supabase gen types typescript --project-id ceibrnyeznqqsnkslmpw > src/lib/su
 
 ### Rutas y sesión
 
-`middleware.ts` refresca la sesión en cada request. Sin sesión, `/horario` redirige a `/login?redirectTo=...`; con sesión, `/login` y `/registro` redirigen a `/horario`.
-
-### Estructura del backend
-
-```
-src/lib/constants/        Jornada (10 módulos × 90 min) y límites.
-src/lib/types/            Tipos de dominio y ActionResult.
-src/lib/validation/       Esquemas Zod compartidos con los formularios.
-src/lib/supabase/         Tipos de la base y cliente de navegador.
-src/server/supabase/      Cliente SSR y refresco de sesión.
-src/server/actions/       login, register, logout, CRUD de asignaturas y bloques, getSchedule.
-middleware.ts             Punto de entrada de Next.js.
-```
+La lógica de sesión está en `src/server/supabase/middleware.ts` y las Server Actions validan la sesión en el servidor. El `middleware.ts` de la raíz se activa en la Fase 5, junto con `/login` y `/registro`, para no redirigir la demo actual de `/horario` a una ruta que todavía no existe.
 
 Contrato completo (firmas, errores y constantes): [`context/contracts.md`](./context/contracts.md).

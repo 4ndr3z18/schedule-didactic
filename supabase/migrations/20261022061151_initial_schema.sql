@@ -1,5 +1,10 @@
 -- UsachSchedule — esquema inicial del horario académico.
 --
+-- Nota histórica: este archivo se aplicó con la jornada provisional de 10×90 y
+-- color hex. La migración 20261022065837_align_jornada_9_modules_y_paleta la
+-- alinea con ADR-004 (9×80 y paleta de claves). Se conserva sin reescribir
+-- porque ya está registrada en el proyecto remoto.
+--
 -- Tablas: profiles, subjects, schedule_blocks.
 -- Reglas estructurales que se verifican en la base y no solo en la aplicación:
 --   * Un alumno solo puede tener filas con su propio user_id (RLS + FKs compuestas).

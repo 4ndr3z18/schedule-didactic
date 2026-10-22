@@ -9,5 +9,22 @@
  */
 export const MAX_SUBJECTS_PER_STUDENT = 24;
 
-/** Paleta por defecto para una asignatura nueva. */
-export const DEFAULT_SUBJECT_COLOR = '#64748b';
+/**
+ * Claves de la paleta de asignaturas. Deben coincidir con
+ * `src/lib/schedule/palette.ts` y con el check de `subjects.color` en la base.
+ */
+export const SUBJECT_COLOR_KEYS = [
+  'clay',
+  'teal',
+  'amber',
+  'olive',
+  'green',
+  'rose',
+  'blue',
+  'violet',
+] as const;
+
+export type SubjectColorKey = (typeof SUBJECT_COLOR_KEYS)[number];
+
+/** Color por defecto para una asignatura nueva. */
+export const DEFAULT_SUBJECT_COLOR: SubjectColorKey = 'clay';

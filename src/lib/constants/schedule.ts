@@ -1,61 +1,64 @@
 /**
- * Constantes de la jornada académica.
+ * Constantes de la jornada académica para el backend.
  *
- * Son la única fuente de verdad para la grilla del frontend, los esquemas Zod y
- * los límites de la base de datos (ver `supabase/migrations`). Si cambian acá,
- * cambian también el `check` de `schedule_blocks` y `context/contracts.md`.
+ * La fuente única es `src/lib/schedule/constants.ts`, que usa el frontend.
+ * Este archivo reexporta esas constantes y añade los helpers de minutos que
+ * necesitan los esquemas Zod y las Server Actions. Si cambia la jornada, se
+ * cambia la fuente y el `check` de `schedule_blocks` en la base.
  *
- * Decisión: 10 módulos consecutivos de 90 minutos desde las 08:15, lunes a
- * sábado, sin recreos modelados. El último módulo va de 21:45 a 23:15.
+ * ADR-004: 9 módulos de 80 minutos, lunes a sábado, con los recreos incluidos
+ * en los horarios de cada módulo.
  */
 
-export const TOTAL_MODULES = 10;
-export const MODULE_MINUTES = 90;
-export const FIRST_MODULE_START = '08:15';
+import {
+  DAYS as SCHEDULE_DAYS,
+  MODULE_MINUTES,
+  MODULES,
+  TOTAL_MODULES,
+} from '@/lib/schedule/constants';
+import type { DayOfWeek } from '@/lib/types/domain';
+
+export { MODULE_MINUTES, TOTAL_MODULES };
+export type { DayOfWeek };
+
+export const FIRST_MODULE_START = MODULES[0].start;
 export const INCLUDE_SATURDAY = true;
 
-export const DAYS = [
-  { value: 1, label: 'Lunes', shortLabel: 'Lun' },
-  { value: 2, label: 'Martes', shortLabel: 'Mar' },
-  { value: 3, label: 'Miércoles', shortLabel: 'Mié' },
-  { value: 4, label: 'Jueves', shortLabel: 'Jue' },
-  { value: 5, label: 'Viernes', shortLabel: 'Vie' },
-  { value: 6, label: 'Sábado', shortLabel: 'Sáb' },
-] as const;
-
-export type DayOfWeek = (typeof DAYS)[number]['value'];
+export const DAYS: { value: DayOfWeek; label: string; shortLabel: string }[] =
+  SCHEDULE_DAYS.map((day) => ({
+    value: day.value,
+    label: day.label,
+    shortLabel: day.short,
+  }));
 
 /** Días que la grilla debe dibujar, según `INCLUDE_SATURDAY`. */
 export const VISIBLE_DAYS = INCLUDE_SATURDAY
   ? DAYS
   : DAYS.filter((day) => day.value !== 6);
 
-const FIRST_MODULE_START_MINUTES = (() => {
-  const [hours, minutes] = FIRST_MODULE_START.split(':').map(Number);
+function timeToMinutes(time: string): number {
+  const [hours, minutes] = time.split(':').map(Number);
   return hours * 60 + minutes;
-})();
+}
 
-function assertModuleIndex(moduleIndex: number): void {
-  if (
-    !Number.isInteger(moduleIndex) ||
-    moduleIndex < 1 ||
-    moduleIndex > TOTAL_MODULES
-  ) {
+function slotFor(moduleIndex: number) {
+  const slot = MODULES.find((module) => module.index === moduleIndex);
+  if (!slot) {
     throw new RangeError(
       `moduleIndex debe ser un entero entre 1 y ${TOTAL_MODULES}; recibido ${moduleIndex}.`,
     );
   }
+  return slot;
 }
 
 /** Minutos desde la medianoche en que empieza un módulo (1..TOTAL_MODULES). */
 export function getModuleStartMinutes(moduleIndex: number): number {
-  assertModuleIndex(moduleIndex);
-  return FIRST_MODULE_START_MINUTES + (moduleIndex - 1) * MODULE_MINUTES;
+  return timeToMinutes(slotFor(moduleIndex).start);
 }
 
 /** Minutos desde la medianoche en que termina un módulo (1..TOTAL_MODULES). */
 export function getModuleEndMinutes(moduleIndex: number): number {
-  return getModuleStartMinutes(moduleIndex) + MODULE_MINUTES;
+  return timeToMinutes(slotFor(moduleIndex).end);
 }
 
 /** Formatea minutos desde la medianoche como `HH:mm`. */

@@ -4,18 +4,18 @@ Plan de construcción acordado. Cada fase termina en un PR revisado por la otra 
 
 Reparto: **Sebastián hace el frontend**, **Andrés hace el backend**. La frontera está en `context/AGENTS.md` § 3.
 
-Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos definidos). **Fase 2 escrita** en la rama `andrez`: falta probar las migraciones contra un proyecto Supabase real y ejecutar `typecheck` cuando exista el scaffold.
+Estado actual: **Fase 0 y Fase 1 completadas**. **Fase 2 verificada** contra el proyecto Supabase remoto (RLS, Auth y PostgREST). **Fase 3 completada** y **Fase 4 en curso**; falta la Fase 5 (auth + integración con las Server Actions).
 
 ---
 
 ## Fase 1 — Base técnica · Sebastián
 
-- [ ] `create-next-app` con App Router, TypeScript `strict`, Tailwind, `src/`, alias `@/*`.
-- [ ] `shadcn/ui` inicializado con tema neutro y `lucide-react`.
-- [ ] Dependencias: `zod`, `react-hook-form`, `@hookform/resolvers`, `@dnd-kit/core`, `@dnd-kit/sortable`, `@supabase/supabase-js`, `@supabase/ssr`.
-- [ ] ESLint + Prettier + script `typecheck` (`tsc --noEmit`).
-- [ ] CI en GitHub Actions: `lint`, `typecheck` y `build` en cada PR.
-- [ ] `README.md` con la puesta en marcha real.
+- [x] `create-next-app` con App Router, TypeScript `strict`, Tailwind, `src/`, alias `@/*`.
+- [x] `shadcn/ui` inicializado con tema neutro y `lucide-react`.
+- [x] Dependencias: `zod`, `react-hook-form`, `@hookform/resolvers`, `@dnd-kit/*`, `@supabase/supabase-js`, `@supabase/ssr`, `html-to-image`.
+- [x] ESLint + Prettier + script `typecheck` (`tsc --noEmit`).
+- [x] CI en GitHub Actions: `lint`, `typecheck` y `build` en cada PR.
+- [x] `README.md` con la puesta en marcha real.
 
 **Terminado cuando:** `npm run lint`, `npm run typecheck` y `npm run build` pasan en limpio, y el CI está verde en un PR de prueba.
 
@@ -23,38 +23,41 @@ Estado actual: **Fase 0 completada** (repo sin código, convenciones y contratos
 
 - [x] Proyecto Supabase y `.env.local` (no se commitea). Proyecto `schedule-didactic` (`ceibrnyeznqqsnkslmpw`, `us-east-1`).
 - [x] `context/contracts.md` completo: tipos de dominio, constantes de la jornada y firma de las Server Actions.
-- [x] Migración inicial de `profiles`, `subjects`, `schedule_blocks` (`supabase/migrations/20261022061151_initial_schema.sql`) y migración de índice (`20261022061429_index_subject_owner_fk.sql`).
+- [x] Migración inicial de `profiles`, `subjects`, `schedule_blocks` (`supabase/migrations/20261022061151_initial_schema.sql`), migración de índice (`20261022061429_index_subject_owner_fk.sql`) y migración de alineación con ADR-004 (9×80 y paleta de colores).
 - [x] Trigger de creación de perfil al registrarse.
 - [x] RLS activo con `auth.uid() = user_id` en `SELECT`, `INSERT`, `UPDATE` y `DELETE`.
 - [x] `src/lib/supabase/` y `src/server/supabase/` con clientes SSR y `database.types.ts` generado desde el proyecto real.
 - [x] `src/lib/validation/` con los esquemas Zod de login, registro, asignatura y bloque.
 - [x] `src/server/actions/` con las acciones de auth y CRUD.
-- [x] `middleware.ts` con refresco de sesión y protección de `/horario`.
+- [x] `src/server/supabase/middleware.ts` con refresco de sesión y reglas de protección, listo para la Fase 5. El punto de entrada raíz se activa cuando existan `/login` y `/registro`.
 - [x] Pruebas pgTAP de aislamiento entre dos alumnos (`supabase/tests/rls.test.sql`).
 
-**Terminado cuando:** dos usuarios de prueba no pueden leer ni modificar los datos del otro, verificado manualmente y documentado en el PR. **Verificado en remoto el 2026-10-22** con dos usuarios temporales: RLS, FK compuesta, exclusión de solapamientos, límites de jornada, código duplicado y cascadas pasaron; los usuarios de prueba se eliminaron. Además se ejecutó el flujo real **Auth (password grant) + PostgREST** con tokens: **53/53 comprobaciones** (aislamiento, permisos, límites, sábado, duración máxima, movimientos, cascadas y acceso anónimo) y un smoke test del cliente **`@supabase/ssr`** con cookies, que pasó completo.
+**Terminado cuando:** dos usuarios de prueba no pueden leer ni modificar los datos del otro, verificado manualmente y documentado en el PR. **Verificado en remoto el 2026-10-22** con dos usuarios temporales: RLS, FK compuesta, exclusión de solapamientos, límites de jornada, código duplicado y cascadas pasaron; los usuarios de prueba se eliminaron. Además se ejecutó el flujo real **Auth (password grant) + PostgREST** con tokens: **40/40 comprobaciones** (aislamiento, permisos, límites de 9×80, paleta de colores, sábado, movimientos, cascadas y acceso anónimo), **7/7** del cliente **`@supabase/ssr`** con cookies y **33/33** de los esquemas Zod.
 
 ## Fase 3 — Grilla del horario (estática) · Sebastián
 
 No depende de la base de datos: avanza con datos mock tipados según `context/contracts.md`.
 
-- [ ] Layout de la app: header, sidebar colapsable en móvil (Sheet de shadcn), área de contenido.
-- [ ] Grilla semanal formato USACH: días en columnas, módulos en filas, encabezado de horas.
-- [ ] Tarjeta de asignatura: nombre, código, nivel, color.
-- [ ] Panel lateral con la lista de asignaturas del alumno.
-- [ ] Skeletons y estado vacío.
-- [ ] Datos mock en un solo archivo, fáciles de reemplazar por las Server Actions.
+- [x] Layout de la app: header, sidebar colapsable en móvil (panel lateral), área de contenido.
+- [x] Grilla semanal formato USACH: días en columnas, módulos en filas, encabezado de horas.
+- [x] Tarjeta de asignatura: nombre, código, nivel y color.
+- [x] Panel lateral con la lista de asignaturas del alumno.
+- [x] Skeletons y estado vacío.
+- [x] Datos mock en un solo archivo, fáciles de reemplazar por las Server Actions.
+- [x] Descarga de la semana como PNG (`html-to-image`).
 
 **Terminado cuando:** la grilla se ve correcta en 360 px, 768 px y 1440 px, sin scroll horizontal roto.
 
 ## Fase 4 — Interacción: drag & drop y edición · Sebastián
 
-- [ ] `DndContext` con `PointerSensor` (`activationConstraint.delay` para pulsación prolongada) y `KeyboardSensor`.
+- [x] `DndContext` con `MouseSensor` + `TouchSensor` (pulsación prolongada de 180 ms) y `KeyboardSensor`.
 - [ ] Arrastrar tarjeta desde el panel a un bloque libre de la grilla.
-- [ ] Mover una tarjeta ya ubicada entre bloques.
+- [x] Mover una tarjeta ya ubicada entre bloques.
 - [ ] Edición de la tarjeta ubicada (nombre, código, nivel) con React Hook Form + los esquemas Zod de `src/lib/validation/`.
 - [ ] Papelera con activación por pulsación prolongada.
-- [ ] Feedback visual: bloque válido, bloque inválido, colisión.
+- [x] Feedback visual: bloque válido, bloque inválido, colisión y aviso al soltar sobre una casilla ocupada.
+
+Los movimientos viven en estado local hasta la Fase 5, que los persiste con las Server Actions.
 
 **Terminado cuando:** funciona con mouse, con teclado y en un teléfono real, sin selección de texto accidental ni scroll fantasma.
 
@@ -62,6 +65,7 @@ No depende de la base de datos: avanza con datos mock tipados según `context/co
 
 - [ ] Conectar la grilla con las Server Actions (Server Components para la carga inicial).
 - [ ] Páginas de login y registro consumiendo las acciones de Andrés, con sus errores mapeados.
+- [ ] Activar el `middleware.ts` de la raíz y proteger `/horario` cuando las páginas de auth existan.
 - [ ] Revisión cruzada de RLS y de accesibilidad.
 - [ ] Revisión visual final en móvil y escritorio.
 - [ ] `context/MEMORY.md`, `context/decisions.md`, `context/contracts.md` y `README.md` al día.
@@ -73,7 +77,7 @@ No depende de la base de datos: avanza con datos mock tipados según `context/co
 
 | Quién | Empieza con | No toca |
 |---|---|---|
-| Sebastián | Fase 1 (scaffold, Tailwind, shadcn, CI) → Fase 3 (grilla con mock) → Fase 4 | `supabase/`, `src/server/`, `src/lib/validation/`, `middleware.ts` |
+| Sebastián | Fase 1 (scaffold, Tailwind, shadcn, CI) → Fase 3 (grilla con mock) → Fase 4 | `supabase/`, `src/server/`, `src/lib/validation/`, `src/server/supabase/middleware.ts` |
 | Andrés | `context/contracts.md` → Fase 2 (migraciones, RLS, auth, acciones) | `src/app/`, `src/components/`, `src/lib/types/domain.ts` sin avisar |
 
 `src/lib/types/domain.ts` es compartido: debe reflejar `context/contracts.md`. Cualquier cambio se avisa en el PR.

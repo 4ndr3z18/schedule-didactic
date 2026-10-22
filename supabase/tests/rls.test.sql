@@ -144,7 +144,7 @@ select extensions.throws_ok(
       '11111111-1111-1111-1111-111111111111',
       'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
       6,
-      10,
+      9,
       2
     )
   $$,

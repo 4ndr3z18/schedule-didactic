@@ -13,7 +13,7 @@ Si es tu primera sesión en este repositorio, **no tienes el contexto de las con
 | Persona | GitHub | Rama | Es dueña de |
 |---|---|---|---|
 | Sebastián | `s3b4s19` | `sebastian` | **Frontend**: `src/app/`, `src/components/`, scaffold, Tailwind, shadcn/ui y CI. |
-| Andrés | `4ndr3z18` | `andrez` | **Backend**: `supabase/`, `src/server/`, `src/lib/validation/` y `middleware.ts`. |
+| Andrés | `4ndr3z18` | `andrez` | **Backend**: `supabase/`, `src/server/`, `src/lib/validation/` y `src/server/supabase/middleware.ts`. El punto de entrada raíz se activa en la Fase 5. |
 
 Compartidas, se modifican por consenso y avisando en el PR: `context/AGENTS.md`, `context/MEMORY.md`, `README.md` y `context/`.
 
@@ -75,7 +75,7 @@ No hay memoria compartida entre sesiones ni entre las dos IAs: **lo que no quede
   | **Framework** | **Next.js** (App Router) | Server Components para datos de usuario y Server Actions para autenticación y mutaciones de horarios. |
   | **Lenguaje** | **TypeScript** (`strict: true`) | Tipado estricto para modelos de dominio (asignaturas, bloques horarios, usuarios). |
   | **Estilos** | **Tailwind CSS** | Diseño responsivo, componentes compartidos y sistema de diseño adaptado al formato USACH. |
-  | **Componentes UI** | **shadcn/ui** (Radix Primitives) | Primitivas accesibles (diálogos, menús desplegables, tarjetas interactivas). |
+  | **Componentes UI** | **shadcn/ui** (Base UI) | Primitivas accesibles (diálogos, menús desplegables, tarjetas interactivas). |
   | **Base de Datos & Auth** | **Supabase** (Postgres + Auth) | Almacenamiento relacional de usuarios, asignaturas y horarios con Row Level Security (RLS). |
   | **Validación** | **Zod** | Esquemas de validación unificados en cliente y servidor para asignaturas y credenciales. |
   | **Formularios** | **React Hook Form** + Resolvers | Gestión eficiente de formularios de login y edición de tarjetas de asignaturas. |
@@ -97,7 +97,7 @@ No hay memoria compartida entre sesiones ni entre las dos IAs: **lo que no quede
 ## 3. Arquitectura y Estándares de Código
 
 ### Frontera frontend / backend
-- `src/server/**` solo lo consumen Server Components, Server Actions y `middleware.ts`. Un Client Component **nunca** importa de ahí.
+- `src/server/**` solo lo consumen Server Components, Server Actions y el middleware de sesión. Un Client Component **nunca** importa de ahí.
 - Los Server Actions viven en `src/server/actions/` y devuelven siempre `{ ok: true, data }` o `{ ok: false, errors }`. La UI no hace `try/catch` sobre Supabase ni conoce sus errores.
 - Los tipos de dominio están en `src/lib/types/domain.ts` y deben coincidir con `context/contracts.md`. Cambiarlos requiere aviso en el PR.
 - Los esquemas Zod de `src/lib/validation/` se usan en ambos lados. No se duplican reglas de validación en el formulario.

@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-import { DEFAULT_SUBJECT_COLOR } from '@/lib/constants/limits';
+import {
+  DEFAULT_SUBJECT_COLOR,
+  SUBJECT_COLOR_KEYS,
+  type SubjectColorKey,
+} from '@/lib/constants/limits';
 import type { Level } from '@/lib/types/domain';
 
 /** Esquemas de asignaturas. El backend los aplica y el formulario los reutiliza. */
@@ -28,9 +32,12 @@ export const subjectCodeSchema = z
 
 export const subjectColorSchema = z
   .string()
-  .trim()
-  .regex(/^#[0-9a-fA-F]{6}$/, 'El color debe tener el formato #RRGGBB.')
-  .transform((value) => value.toLowerCase());
+  .transform((value) => value.trim().toLowerCase())
+  .refine(
+    (value) => (SUBJECT_COLOR_KEYS as readonly string[]).includes(value),
+    `El color debe ser una clave de la paleta: ${SUBJECT_COLOR_KEYS.join(', ')}.`,
+  )
+  .transform((value) => value as SubjectColorKey);
 
 export const subjectLevelSchema = z.coerce
   .number()

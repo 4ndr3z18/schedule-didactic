@@ -15,7 +15,7 @@ export const dayOfWeekSchema = z.coerce
 
 export const moduleIndexSchema = z.coerce
   .number()
-  .min(1, 'El módulo debe estar entre 1 y 10.')
+  .min(1, `El módulo debe estar entre 1 y ${TOTAL_MODULES}.`)
   .max(TOTAL_MODULES, `El módulo debe estar entre 1 y ${TOTAL_MODULES}.`)
   .refine(Number.isInteger, 'El módulo debe ser un número entero.');
 
